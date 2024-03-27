@@ -1,0 +1,54 @@
+{
+  "name": "Francisco Javier Pichinte Lopez",
+  "residence": "San Salvador, El Salvador",
+  "phone": "+503 77462356",
+  "email": "95fjpl95@gmail.com",
+  "github": "https://github.com/Perlesvaux",
+  "linkedin": "https://www.linkedin.com/in/francisco-pichinte-17a616272",
+  "profile": "Full-Stack developer & Linux enthusiast with an eclectic background in humanities, psychology, literature and customer service.",
+  "experience": [
+    {"when":"Apr 2016 – Jan 2018",
+     "where": "Sykes",
+     "what":"Front-line agent - T1/Voice",
+     "description":" Resolving in-coming calls regarding travel arrangements. Hotels, Flights and Cars."},
+
+
+    {"when":"Jan 2018 – Nov 2019",
+     "where": "Sitel",
+     "what":"ASC specialist – T1/Voice",
+     "description":"Resolving in-coming calls regarding Flight disruptions through GDS (Global Distribution System) such as Amadeus, Sabre and Farelogix."},
+
+
+    {"when":"Nov 2019 – Apr 2021",
+     "where": "Sitel",
+     "what":"Expert - T2/Chat",
+     "description":"Resolving up to two simultaneous in-coming chats regarding travel arrangements. Higher authority granted so as to resolve critical issues in a timely manner."},
+
+
+    {"when":"Apr 2021 – May 2023",
+     "where": "Foundever",
+     "what":"Universal Specialist - T3/Chat",
+     "description":"Resolving up to two simultaneous in-coming chats regarding travel arrangements. Providing assistance to all points of sale regardless of language. Further authority granted in order to quickly resolve complex dilemmas."},
+
+
+    {"when":"Jun 2021 - May 2023",
+     "where": "Foundever",
+     "what":"Software Developer",
+     "description":"Designing and implementing a solution (SPA) to assist agents in their daily duties."}
+  ],
+  "certifications":[
+    {"document":"./certs/fcc00"},
+    {"document":"./certs/fcc01"},
+    {"document":"./certs/fcc02"},
+    {"document":"./certs/fcc03"},
+    {"document":"./certs/fcc04"},
+    {"document":"./certs/fcc05"},
+    {"document":"./certs/g4_1"},
+    {"document":"./certs/g4_2"},
+    {"document":"./certs/g4_3"},
+    {"document":"./certs/g4_4"},
+    {"document":"./certs/g4_5"}
+  ]
+
+}
+
