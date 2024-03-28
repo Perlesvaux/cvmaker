@@ -37,18 +37,25 @@
      "description":"Designing and implementing a solution (SPA) to assist agents in their daily duties."}
   ],
   "certifications":[
-    {"document":"./certs/fcc00"},
-    {"document":"./certs/fcc01"},
-    {"document":"./certs/fcc02"},
-    {"document":"./certs/fcc03"},
-    {"document":"./certs/fcc04"},
-    {"document":"./certs/fcc05"},
-    {"document":"./certs/g4_1"},
-    {"document":"./certs/g4_2"},
-    {"document":"./certs/g4_3"},
-    {"document":"./certs/g4_4"},
-    {"document":"./certs/g4_5"}
-  ]
+    "./certs/fcc00",
+    "./certs/fcc01",
+    "./certs/fcc02",
+    "./certs/fcc03",
+    "./certs/fcc04",
+    "./certs/fcc05",
+    "./certs/g4_1",
+    "./certs/g4_2",
+    "./certs/g4_3",
+    "./certs/g4_4",
+    "./certs/g4_5"
+  ],
+  "languages": "C2 English Proficiency, Native Spanish Speaker",
+  "programing": "Python, Bash, JavaScript, Java, C#",
+  "frontend": "CSS, HTML5, Bootstrap & React",
+  "backend": "Flask, SpringBoot, Laravel, .NET, ASP.NET, Express, Node",
+  "databases":"MySQL, SQL, SQLite, MongoDB"
+  
+
 
 }
 
