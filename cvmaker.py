@@ -11,6 +11,9 @@ body = """
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
     <link href="./bootstrap.min.css" rel="stylesheet">
+
+    <link href="./style.css" rel="stylesheet">
+
     <title>cvmaker</title>
 </head>
 <body>
@@ -91,6 +94,7 @@ body = """
       </div>
 </div>
 
+<div class="break"></div>
 
 
 <div class="card border-primary mb-3">
@@ -134,9 +138,14 @@ with open('./cv.json', 'r') as file:
         frontend=cv["frontend"],
         backend=cv["backend"],
         databases=cv["databases"],
-        certifications = " ".join([f"<img style='height:50%;width:50%;' class='border border-dark' src='{src}'>" for src in cv["certifications"]]),
+        certifications = " ".join([f"<div style='height:33%;width:33%;'><a href='{cert['link']}'><img style='height:100%;width:100%; class='border border-dark' src='{cert['file']}'></a></div>" for cert in cv["certifications"]]),
         experience = " ".join([f"<li class='list-group-item list-group-item-primary d-flex'><div class='container'><div class='row'><div class='col-4'><strong> {exp['when']} </strong></div><div class='col-4'><strong>{exp['where']}</strong></div><div class='col-4'><i><strong>{exp['what']}</strong></i></div></div><div>{exp[ 'description' ]}</div></div></li>" for exp in cv['experience']])
 
         )
     print(result)
 
+
+
+
+
+# Profile MUST BE 59 words or less
