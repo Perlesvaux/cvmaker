@@ -37,17 +37,17 @@
      "description":"Designing and implementing a solution (SPA) to assist agents in their daily duties."}
   ],
   "certifications":[
-    "./certs/Back End Development and APIs.png",
-    "./certs/Front End Development Libraries.png",
-    "./certs/Scientific Computing with Python.png",
-    "./certs/JavaScript Algorithms and Data Structures.png",
-    "./certs/Foundational CS with Microsoft.png",
-    "./certs/Responsive Web Design.png",
-    "./certs/g4_1.png",
-    "./certs/g4_2.png",
-    "./certs/g4_3.png",
-    "./certs/g4_4.png",
-    "./certs/g4_5.png"
+  {"file":"./certs/Back End Development and APIs.png", "link":"https://www.freecodecamp.org/certification/Perlesvaux/back-end-development-and-apis"},
+  {"file":"./certs/Front End Development Libraries.png", "link":"https://www.freecodecamp.org/certification/Perlesvaux/front-end-development-libraries"},
+  {"file":"./certs/Scientific Computing with Python.png", "link":"https://www.freecodecamp.org/certification/Perlesvaux/scientific-computing-with-python-v7"},
+  {"file":"./certs/JavaScript Algorithms and Data Structures.png", "link":"https://www.freecodecamp.org/certification/Perlesvaux/javascript-algorithms-and-data-structures"}, 
+  {"file":"./certs/Foundational CS with Microsoft.png", "link":"https://www.freecodecamp.org/certification/Perlesvaux/foundational-c-sharp-with-microsoft"},
+  {"file":"./certs/Responsive Web Design.png", "link":"https://www.freecodecamp.org/certification/Perlesvaux/responsive-web-design"},
+  {"file":"./certs/g4_1.png", "link": "https://drive.google.com/file/d/1dlqOqBjyxT7Dg-xoNQD1mfk_ex7YMmbn/view?usp=drive_link"},
+  {"file":"./certs/g4_2.png", "link": "https://drive.google.com/file/d/1anCwBfDeif0z7W0ti8WVWYAuegp59P80/view?usp=drive_link"},
+  {"file":"./certs/g4_3.png", "link": "https://drive.google.com/file/d/12f2QRmU3zXzY7E4vee6xco7-3TzAFy5Z/view?usp=drive_link"},
+  {"file":"./certs/g4_4.png", "link": "https://drive.google.com/file/d/1M8IllB0mS-ggD6f7FwNBttj7ydSjItZp/view?usp=drive_link"},
+  {"file":"./certs/g4_5.png", "link": "https://drive.google.com/file/d/1H2vtBgQYj_Uqoi9rANHQqJeIhMzf11t9/view?usp=drive_link"}
   ],
   "languages": "C2 English Proficiency, Native Spanish Speaker",
   "programing": "Python, Bash, JavaScript, Java, C#",
