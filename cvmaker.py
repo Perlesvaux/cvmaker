@@ -14,14 +14,20 @@ body = """
 
     <link href="./style.css" rel="stylesheet">
 
+    <style>
+
+    {style}
+
+    </style>
+
     <title>cvmaker</title>
 </head>
 <body>
 
 
-<div class="card border-info mb-3">
+<div class="card border-light mb-3">
   <!-- <div class="card-header text-dark text-center">Name Goes Here</div> -->
-      <div class="card-header text-dark text-center"><i class="bi bi-person-fill"></i> <span class="px-2">{name}</span></div>
+      <div class="card-header text-dark text-center h1"><i class="bi bi-person-fill"></i> <span class="px-2">{name}</span></div>
 
   <div class="card-body">
     <ul class="list-group mb-3">
@@ -49,8 +55,8 @@ body = """
 </div>
 
 
-<div class="card border-primary mb-3">
-    <div class="card-header text-center">Skills</div>
+<div class="card border-light mb-3">
+    <div class="card-header text-center h2 text-dark">Skills</div>
      <div class="card-body">
     <ul class="list-group">
       <li class="list-group-item list-group-item-success d-flex">
@@ -74,17 +80,19 @@ body = """
 
 
 
-<div class="card border-primary mb-3">
-    <div class="card-header text-center">Profile</div>
+<div class="card border-light mb-3">
+    <div class="card-header text-center h2 text-dark">Profile</div>
      <div class="card-body">
-        {profile}
+        <div class="alert alert-dismissible alert-info">
+            {profile}
+        </div>
       </div>
 </div>
 
 <div class="break"></div>
 
-<div class="card border-primary mb-3">
-    <div class="card-header text-center">Licenses & certifications</div>
+<div class="card border-light mb-3">
+    <div class="card-header text-center h2 text-dark">Licenses & certifications</div>
      <div class="card-body">
         <div class="container d-flex flex-wrap">
           {certifications}
@@ -96,8 +104,8 @@ body = """
 <div class="break"></div>
 
 
-<div class="card border-primary mb-3">
-    <div class="card-header text-center">Experience</div>
+<div class="card border-light mb-3">
+    <div class="card-header text-center h2 text-dark">Experience</div>
      <div class="card-body">
 
 
@@ -120,11 +128,14 @@ body = """
 """
 
 import json
+import argparse
 
 
-with open('./cv.json', 'r') as file:
+with open('./cv.json', 'r') as file, open('./styles/spacelab.css') as css:
     cv = json.load(file)
+    style = css.read()
     result = body.format(
+        style=style,    
         name=cv["name"],
         residence=cv["residence"],
         phone=cv["phone"],
