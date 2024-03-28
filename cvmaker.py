@@ -134,7 +134,7 @@ with open('./cv.json', 'r') as file:
         frontend=cv["frontend"],
         backend=cv["backend"],
         databases=cv["databases"],
-        certifications = " ".join([f"<img style='height:50%;width:50%;' src='{src}'>" for src in cv["certifications"]]),
+        certifications = " ".join([f"<img style='height:50%;width:50%;' class='border border-dark' src='{src}'>" for src in cv["certifications"]]),
         experience = " ".join([f"<li class='list-group-item list-group-item-primary d-flex'><div class='container'><div class='row'><div class='col-4'><strong> {exp['when']} </strong></div><div class='col-4'><strong>{exp['where']}</strong></div><div class='col-4'><i><strong>{exp['what']}</strong></i></div></div><div>{exp[ 'description' ]}</div></div></li>" for exp in cv['experience']])
 
         )
