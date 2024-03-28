@@ -37,17 +37,17 @@
      "description":"Designing and implementing a solution (SPA) to assist agents in their daily duties."}
   ],
   "certifications":[
-    "./certs/fcc00",
-    "./certs/fcc01",
-    "./certs/fcc02",
-    "./certs/fcc03",
-    "./certs/fcc04",
-    "./certs/fcc05",
-    "./certs/g4_1",
-    "./certs/g4_2",
-    "./certs/g4_3",
-    "./certs/g4_4",
-    "./certs/g4_5"
+    "./certs/Back End Development and APIs.png",
+    "./certs/Front End Development Libraries.png",
+    "./certs/Scientific Computing with Python.png",
+    "./certs/JavaScript Algorithms and Data Structures.png",
+    "./certs/Foundational CS with Microsoft.png",
+    "./certs/Responsive Web Design.png",
+    "./certs/g4_1.png",
+    "./certs/g4_2.png",
+    "./certs/g4_3.png",
+    "./certs/g4_4.png",
+    "./certs/g4_5.png"
   ],
   "languages": "C2 English Proficiency, Native Spanish Speaker",
   "programing": "Python, Bash, JavaScript, Java, C#",
