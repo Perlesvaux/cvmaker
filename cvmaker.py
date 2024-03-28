@@ -21,12 +21,10 @@ body = """
 
 <div class="card border-info mb-3">
   <!-- <div class="card-header text-dark text-center">Name Goes Here</div> -->
+      <div class="card-header text-dark text-center"><i class="bi bi-person-fill"></i> <span class="px-2">{name}</span></div>
 
   <div class="card-body">
     <ul class="list-group mb-3">
-      <li class="list-group-item list-group-item-info d-flex">
-                <i class="bi bi-person-fill"></i> <span class="px-2">{name}</span>
-      </li>
       <li class="list-group-item list-group-item-info d-flex">
                 <i class="bi bi-geo-alt-fill"></i> <span class="px-2">{residence}</span>
       </li>
@@ -83,6 +81,7 @@ body = """
       </div>
 </div>
 
+<div class="break"></div>
 
 <div class="card border-primary mb-3">
     <div class="card-header text-center">Licenses & certifications</div>
