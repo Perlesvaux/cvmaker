@@ -10,11 +10,10 @@ body = """
     <!-- Bootstrap 5.3.2 -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" integrity="sha384-4LISF5TTJX/fLmGSxO53rV4miRxdg84mZsxmO8Rx5jGtp/LbrixFETvWa5a6sESd" crossorigin="anonymous">
-    <link href="./bootstrap.min.css" rel="stylesheet">
 
-    <link href="./style.css" rel="stylesheet">
 
     <style>
+    {pagebreak}
 
     {style}
 
@@ -128,34 +127,60 @@ body = """
 """
 
 import json
+
 import argparse
 
 
-with open('./cv.json', 'r') as file, open('./styles/spacelab.css') as css:
-    cv = json.load(file)
-    style = css.read()
-    result = body.format(
-        style=style,    
-        name=cv["name"],
-        residence=cv["residence"],
-        phone=cv["phone"],
-        email=cv["email"],
-        github=cv["github"],
-        linkedin=cv["linkedin"],
-        profile=cv["profile"],
-        languages=cv["languages"],
-        programing=cv["programing"],
-        frontend=cv["frontend"],
-        backend=cv["backend"],
-        databases=cv["databases"],
-        certifications = " ".join([f"<div style='height:33%;width:33%;'><a href='{cert['link']}'><img style='height:100%;width:100%; class='border border-dark' src='{cert['file']}'></a></div>" for cert in cv["certifications"]]),
-        experience = " ".join([f"<li class='list-group-item list-group-item-primary d-flex'><div class='container'><div class='row'><div class='col-4'><strong> {exp['when']} </strong></div><div class='col-4'><strong>{exp['where']}</strong></div><div class='col-4'><i><strong>{exp['what']}</strong></i></div></div><div>{exp[ 'description' ]}</div></div></li>" for exp in cv['experience']])
+def main():
+    parser = argparse.ArgumentParser(description='Turn a JSON file into a cv! (1) Pipe the output to an HTML file. (2) Open it and do CTRL+P to generate a PDF out of it! ')
 
-        )
-    print(result)
+    # Positional argument for the file name
+    parser.add_argument('json', help='Name of the file')
+
+    # Optional argument to specify image size
+    parser.add_argument('-i', '--image-size', type=int, help='Image size', choices=[0,1,2])
+
+    # Optional argument to specify flavor
+    parser.add_argument('-f','--flavor', help='Flavor of the script', choices=[
+"zephyr","yeti","vapor","united","superhero","spacelab","solar","slate","sketchy","simplex","sandstone","quartz","pulse",
+"morph","minty","materia","lux","lumen","litera","journal","flatly","darkly","cyborg","cerulean","cosmo"])
+
+    args = parser.parse_args()
+
+    sizes = ['33', '50', '100']
+
+    img_size = sizes[args.image_size] if args.image_size else '33'
+
+    flavor = f'./styles/{args.flavor}.css' if args.flavor else './styles/spacelab.css'
+
+    with open(args.json, 'r') as file, open(flavor) as css:
+        cv = json.load(file)
+        style = css.read()
+        result = body.format(
+            style=style,    
+            pagebreak="@media print {.break {page-break-after: always;}}",
+            name=cv["name"],
+            residence=cv["residence"],
+            phone=cv["phone"],
+            email=cv["email"],
+            github=cv["github"],
+            linkedin=cv["linkedin"],
+            profile=cv["profile"],
+            languages=cv["languages"],
+            programing=cv["programing"],
+            frontend=cv["frontend"],
+            backend=cv["backend"],
+            databases=cv["databases"],
+            certifications = " ".join([f"<div style='height:{img_size}%;width:{img_size}%;'><a href='{cert['link']}'><img style='height:100%;width:100%; class='border border-dark' src='{cert['file']}'></a></div>" for cert in cv["certifications"]]),
+            experience = " ".join([f"<li class='list-group-item list-group-item-primary d-flex'><div class='container'><div class='row'><div class='col-4'><strong> {exp['when']} </strong></div><div class='col-4'><strong>{exp['where']}</strong></div><div class='col-4'><i><strong>{exp['what']}</strong></i></div></div><div>{exp[ 'description' ]}</div></div></li>" for exp in cv['experience']])
+
+            )
+        print(result)
 
 
 
+if __name__ == "__main__":
+    main()
 
-
+#TODO add 'break' within style 
 # Profile MUST BE 59 words or less
