@@ -58,25 +58,10 @@ body = """
     <div class="card-header text-center h2 text-dark">Skills</div>
      <div class="card-body">
     <ul class="list-group">
-      <li class="list-group-item list-group-item-success d-flex">
-                <i class="bi bi-translate"></i> <span class="px-2">{languages}</span> 
-      </li>
-      <li class="list-group-item list-group-item-success d-flex">
-                <i class="bi bi-code-slash"></i> <span class="px-2">{programing}</span>
-      </li>
-      <li class="list-group-item list-group-item-success d-flex">
-                <i class="bi bi-window-stack"></i> <span class="px-2">{frontend}</span>
-      </li>
-      <li class="list-group-item list-group-item-success d-flex">
-                <i class="bi bi-server"></i> <span class="px-2">{backend}</span>
-      </li>
-      <li class="list-group-item list-group-item-success d-flex">
-                <i class="bi bi-database-check"></i> <span class="px-2">{databases}</span>
-      </li>
+      {skills}
     </ul>   
       </div>
 </div>
-
 
 
 <div class="card border-light mb-3">
@@ -107,12 +92,9 @@ body = """
     <div class="card-header text-center h2 text-dark">Experience</div>
      <div class="card-body">
 
-
-
     <ul class="list-group">
       {experience}
           </ul>
-
 
       </div>
 </div>
@@ -166,11 +148,7 @@ def main():
             github=cv["github"],
             linkedin=cv["linkedin"],
             profile=cv["profile"],
-            languages=cv["languages"],
-            programing=cv["programing"],
-            frontend=cv["frontend"],
-            backend=cv["backend"],
-            databases=cv["databases"],
+            skills = " ".join ([f"<li class='list-group-item list-group-item-success d-flex'>{skill}</li>" for skill in cv["skills"]]),
             certifications = " ".join([f"<div style='height:{img_size}%;width:{img_size}%;'><a href='{cert['link']}'><img style='height:100%;width:100%; class='border border-dark' src='{cert['file']}'></a></div>" for cert in cv["certifications"]]),
             experience = " ".join([f"<li class='list-group-item list-group-item-primary d-flex'><div class='container'><div class='row'><div class='col-4'><strong> {exp['when']} </strong></div><div class='col-4'><strong>{exp['where']}</strong></div><div class='col-4'><i><strong>{exp['what']}</strong></i></div></div><div>{exp[ 'description' ]}</div></div></li>" for exp in cv['experience']])
 
