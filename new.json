@@ -1,0 +1,36 @@
+{
+  "name": "Your_full_name_goes_here",
+  "residence": "City, country",
+  "phone": "+000 0000000",
+  "email": "example@mail.com",
+  "github": "Link_to_your_github_goes_here",
+  "linkedin": "Link_to_your_linkedin_goes_here",
+  "profile": "59-word description of who you are. i.e.: Front-End Developer. I specialize in React.js and love to fine-tune my own CSS whenever possible. UX before looks. I carefully study the documentation before starting to code. Effective communication is the way to get things done; clear code is the map, concise comments the compass",
+  "experience": [
+    {"when":"Dec 2011 – Jan 2012",
+     "where": "Place",
+     "what":"Role",
+     "description":"Role_description_goes_here"},
+
+    {"when":"Apr 2016 – Apr 2019",
+     "where": "Place",
+     "what":"Role",
+     "description":"Role_description_goes_here"}
+
+  ],
+  "certifications":[
+    {"file":"./path/to/image.png", "link":"https://www.freecodecamp.org/certification/..."},
+    {"file":"./path/to/image.png", "link": "https://drive.google.com/..."}
+  ],
+  "skills":[
+  "<i class='bi bi-translate pe-2'></i>English_proficiency_and_any_other_language_you_speak_goes_here",
+  "<i class='bi bi-code-slash pe-2'></i>You_can_add_bootstrap_icons_and_add_some_padding_with_class_pe-2",
+  "https://icons.getbootstrap.com/",
+  "Customize_skill_set_as_you_see_fit",
+  "Add_soft_skills_if_you_want_as_well",
+  "Be_prudent_as_too_many_rows_can_make_the_final_document_somewhat_ugly"
+  ]
+
+
+}
+

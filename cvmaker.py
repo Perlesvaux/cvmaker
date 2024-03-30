@@ -160,5 +160,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-#TODO add 'break' within style 
+#TODO add 'json generator flag' if possible, also add bootstrap-icons locally  
 # Profile MUST BE 59 words or less
