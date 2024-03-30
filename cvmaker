@@ -108,6 +108,32 @@ body = """
 
 """
 
+
+skills_template = """<li class='list-group-item list-group-item-success d-flex'>{skill}</li>"""
+certs_template = """
+
+          <div class='card border-light' style='height:{img_size}%;width:{img_size}%;'>
+            <div class="card-body" >
+              <div><a href='{link}'><img style="height:100%;width:100%; class="border border-dark" src='{image}' alt="{description}"></a></div>
+            </div>
+            <div class="card-footer  h6">
+               {description}
+            </div>
+          </div>
+"""
+experience_template = """
+<li class='list-group-item list-group-item-primary d-flex'>
+ <div class='container'>
+  <div class='row'>
+   <div class='col-4'><strong>{when}</strong></div>
+   <div class='col-4'><strong>{where}</strong></div>
+   <div class='col-4'><i><strong>{what}</strong></i></div></div>
+   <div>{description}</div></div>
+</li>
+   """
+
+
+
 import os
 import json
 
@@ -155,9 +181,9 @@ def main():
             github=cv["github"],
             linkedin=cv["linkedin"],
             profile=cv["profile"],
-            skills = " ".join ([f"<li class='list-group-item list-group-item-success d-flex'>{skill}</li>" for skill in cv["skills"]]),
-            certifications = " ".join([f"<div style='height:{img_size}%;width:{img_size}%;'><a href='{cert['link']}'><img style='height:100%;width:100%; class='border border-dark' src='{cert['file']}'></a></div>" for cert in cv["certifications"]]),
-            experience = " ".join([f"<li class='list-group-item list-group-item-primary d-flex'><div class='container'><div class='row'><div class='col-4'><strong> {exp['when']} </strong></div><div class='col-4'><strong>{exp['where']}</strong></div><div class='col-4'><i><strong>{exp['what']}</strong></i></div></div><div>{exp[ 'description' ]}</div></div></li>" for exp in cv['experience']])
+            skills = " ".join ([skills_template.format(skill=skill) for skill in cv["skills"]]),
+            certifications = " ".join([certs_template.format(link=cert['link'], image=cert['image'], description=cert['description'], img_size=img_size) for cert in cv["certifications"]]),
+            experience = " ".join([experience_template.format(when=exp['when'], where=exp['where'], what=exp['what'], description=exp['description']) for exp in cv['experience']])
 
             )
         print(result)
@@ -167,5 +193,6 @@ def main():
 if __name__ == "__main__":
     main()
 
-#TODO add 'json generator flag' if possible, also add bootstrap-icons locally  
+#TODO add 'json generator flag' if possible, also add bootstrap-icons locally.
+#TODO add flag to specify card theme [primary info warning dark, etc...] text-color and header-color
 # Profile MUST BE 59 words or less
