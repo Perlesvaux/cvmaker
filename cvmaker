@@ -108,9 +108,16 @@ body = """
 
 """
 
+import os
 import json
 
 import argparse
+
+
+# root = os.path.dirname(os.path.abspath(__file__))
+# root = os.path.dirname(os.getcwd())
+root = os.path.dirname(os.path.realpath(__file__))
+
 
 
 def main():
@@ -133,7 +140,7 @@ def main():
 
     img_size = sizes[args.image_size] if args.image_size else '33'
 
-    flavor = f'./styles/{args.flavor}.css' if args.flavor else './styles/spacelab.css'
+    flavor = os.path.join(root, 'styles', f"{args.flavor}.css") if args.flavor else os.path.join(root, 'styles', 'spacelab.css')
 
     with open(args.json, 'r') as file, open(flavor) as css:
         cv = json.load(file)
