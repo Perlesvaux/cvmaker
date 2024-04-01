@@ -7,12 +7,12 @@
   "linkedin": "Link_to_your_linkedin_goes_here",
   "profile": "59-word description of who you are. i.e.: Front-End Developer. I specialize in React.js and love to fine-tune my own CSS whenever possible. UX before looks. I carefully study the documentation before starting to code. Effective communication is the way to get things done; clear code is the map, concise comments the compass",
   "experience": [
-    {"when":"Dec 2011 – Jan 2012",
+    {"when":"Dec 2011 - Jan 2012",
      "where": "Place",
      "what":"Role",
      "description":"Role_description_goes_here"},
 
-    {"when":"Apr 2016 – Apr 2019",
+    {"when":"Apr 2016 - Apr 2019",
      "where": "Place",
      "what":"Role",
      "description":"Role_description_goes_here"}

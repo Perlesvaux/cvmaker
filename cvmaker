@@ -1,5 +1,64 @@
 #!/usr/bin/env python3
 
+"""
+Turn a JSON file into a cv! 
+Initialize a JSON representation of your cv.
+Customize it as you see fit.
+Lastly, feed that JSON to this script like this:
+
+    cvmaker CV.json 
+
+Open the resulting HTML file. Now do CTRL+P to generate a PDF out of it (i.e.: Destination -> Save to PDF)! 
+Use these settings for the best results:
+    Orientation -> Portrait
+    Margins -> None
+    Scale -> Default (or 'Fit to page width')
+    
+... Enjoy! =D
+
+"""
+
+
+seed = {
+  "name": "Your_full_name_goes_here",
+  "residence": "City, country",
+  "phone": "+000 0000000",
+  "email": "example@mail.com",
+  "github": "Link_to_your_github_goes_here",
+  "linkedin": "Link_to_your_linkedin_goes_here",
+  "profile": "59-word description of who you are. i.e.: Front-End Developer. I specialize in React.js and love to fine-tune my own CSS whenever possible. UX before looks. I carefully study the documentation before starting to code. Effective communication is the way to get things done; clear code is the map, concise comments the compass",
+  "experience": [
+    {"when":"Dec 2011 - Jan 2012",
+     "where": "Place",
+     "what":"Role",
+     "description":"Role_description_goes_here"},
+
+    {"when":"Apr 2016 - Apr 2019",
+     "where": "Place",
+     "what":"Role",
+     "description":"Role_description_goes_here"}
+
+  ],
+  "certifications":[
+    {"description":"Briefly_describe_what_cert_is_about", "image":"./path/to/image.png", "link":"https://www.freecodecamp.org/certification/..."},
+    {"description":"Briefly_describe_what_cert_is_about", "image":"./path/to/image.png", "link": "https://drive.google.com/..."}
+  ],
+  "skills":[
+  "<i class='bi bi-translate pe-2'></i>English_proficiency_and_any_other_language_you_speak_goes_here",
+  "<i class='bi bi-code-slash pe-2'></i>You_can_add_bootstrap_icons_and_add_some_padding_with_class_pe-2",
+  "https://icons.getbootstrap.com/",
+  "Customize_skill_set_as_you_see_fit",
+  "Add_soft_skills_if_you_want_as_well",
+  "Be_prudent_as_too_many_rows_can_make_the_final_document_somewhat_ugly"
+  ]
+}
+
+
+
+
+
+
+
 body = """
 <!DOCTYPE html>
 <html lang="en">
@@ -154,7 +213,7 @@ def main():
     parser = argparse.ArgumentParser(description='Turn a JSON file into a cv! (1) Pipe the output to an HTML file. (2) Open it and do CTRL+P to generate a PDF out of it! ')
 
     # Positional argument for the file name
-    parser.add_argument('json', help='Name of the file')
+    parser.add_argument('json', nargs='?', help='Name of the file')
 
     # Optional argument to specify image size
     parser.add_argument('-i', '--image-size', type=int, help='Image size', choices=[0,1,2])
@@ -164,7 +223,54 @@ def main():
 "zephyr","yeti","vapor","united","superhero","spacelab","solar","slate","sketchy","simplex","sandstone","quartz","pulse",
 "morph","minty","materia","lux","lumen","litera","journal","flatly","darkly","cyborg","cerulean","cosmo"])
 
+    parser.add_argument('-n', '--new', action='store_true', help="Resulting json is your cv. Customise it as you see fit.")
+
+
+
+    # Action starts HERE!
     args = parser.parse_args()
+
+
+    # Initialize a cv.json. 
+    if args.new:
+        print(f"new flag activated here: {os.path.join(root, os.getcwd())}!")
+
+        with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'x') as your_cv:
+
+            # Getting user input...
+            print("Skip field leaving blank & pressing ENTER.")
+            cli_name = input("Enter your full name")
+            cli_country = input("Residence - Enter the country you currently are on")
+            cli_city = input("Residence - Enter the city you currently live at")
+            cli_ext = input("Phone - Enter your area/country code (i.e.: 001 = USA, 503 = ESA)")
+            cli_phone = input("Phone - Enter your phone number")
+            cli_email = input("Email - Enter your e-mail address")
+
+            # Validation...
+            name    = seed['name']    if cli_name=="" else cli_name
+            country = 'Country'       if cli_country=="" else cli_country
+            city    = 'City'          if cli_city=="" else cli_city
+            ext     = '+000'     if cli_ext=="" else f"+{cli_ext}"
+            phone   = seed['phone']   if cli_phone=="" else cli_phone
+            email   = seed['email']   if cli_email=="" else cli_email
+
+            seed['name']       = name    
+            seed['residence']  = f"{city}, {country}" 
+            seed['phone']      = f"{ext} {phone}"     
+            seed['email']      = email   
+
+            your_cv.write(json.dumps(seed, indent=2))
+            # new_cv = seed.format(name=name, country=country, city=city, ext=ext, phone=phone, email=email)
+            # your_cv.write(new_cv)
+
+
+        exit(0)
+
+
+
+
+
+
 
     sizes = ['33', '50', '100']
 
@@ -174,31 +280,34 @@ def main():
 
     icons = os.path.join(root, 'font', 'bootstrap-icons.css')
 
-    with open(args.json, 'r') as file, open(flavor) as css:
-        cv = json.load(file)
-        result = body.format(
-            icons=icons,   
-            style=css.read(),    
-            pagebreak="@media print {.break {page-break-after: always;}}",
-            name=cv["name"],
-            residence=cv["residence"],
-            phone=cv["phone"],
-            email=cv["email"],
-            github=cv["github"],
-            linkedin=cv["linkedin"],
-            profile=cv["profile"],
-            skills = " ".join ([skills_template.format(skill=skill) for skill in cv["skills"]]),
-            certifications = " ".join([certs_template.format(link=cert['link'], image=cert['image'], description=cert['description'], img_size=img_size) for cert in cv["certifications"]]),
-            experience = " ".join([experience_template.format(when=exp['when'], where=exp['where'], what=exp['what'], description=exp['description']) for exp in cv['experience']])
+    if args.json:
 
-            )
-        print(result)
+        with open(args.json, 'r') as file, open(flavor) as css:
+            cv = json.load(file)
+            result = body.format(
+                icons=icons,   
+                style=css.read(),    
+                pagebreak="@media print {.break {page-break-after: always;}}",
+                name=cv["name"],
+                residence=cv["residence"],
+                phone=cv["phone"],
+                email=cv["email"],
+                github=cv["github"],
+                linkedin=cv["linkedin"],
+                profile=cv["profile"],
+                skills = " ".join ([skills_template.format(skill=skill) for skill in cv["skills"]]),
+                certifications = " ".join([certs_template.format(link=cert['link'], image=cert['image'], description=cert['description'], img_size=img_size) for cert in cv["certifications"]]),
+                experience = " ".join([experience_template.format(when=exp['when'], where=exp['where'], what=exp['what'], description=exp['description']) for exp in cv['experience']])
+
+                )
+            print(result)
 
 
 
 if __name__ == "__main__":
     main()
 
-#TODO add 'json generator flag' if possible, also add bootstrap-icons locally.
+#TODO add 'json generator flag'
+#TODO add json-feature interactive adder -a -add [certification, skill, etc.]
 #TODO add flag to specify card theme [primary info warning dark, etc...] text-color and header-color
 # Profile MUST BE 59 words or less
