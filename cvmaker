@@ -44,12 +44,12 @@ seed = {
     {"description":"Briefly_describe_what_cert_is_about", "image":"./path/to/image.png", "link": "https://drive.google.com/..."}
   ],
   "skills":[
-  "<i class='bi bi-translate pe-2'></i>English_proficiency_and_any_other_language_you_speak_goes_here",
-  "<i class='bi bi-code-slash pe-2'></i>You_can_add_bootstrap_icons_and_add_some_padding_with_class_pe-2",
-  "https://icons.getbootstrap.com/",
-  "Customize_skill_set_as_you_see_fit",
-  "Add_soft_skills_if_you_want_as_well",
-  "Be_prudent_as_too_many_rows_can_make_the_final_document_somewhat_ugly"
+      {"skill":"<i class='bi bi-translate pe-2'></i>English_proficiency_and_any_other_language_you_speak_goes_here"},
+      {"skill":"<i class='bi bi-code-slash pe-2'></i>You_can_add_bootstrap_icons_and_add_some_padding_with_class_pe-2"},
+      {"skill":"https://icons.getbootstrap.com/"},
+      {"skill":"Customize_skill_set_as_you_see_fit"},
+      {"skill":"Add_soft_skills_if_you_want_as_well"},
+      {"skill":"Be_prudent_as_too_many_rows_can_make_the_final_document_somewhat_ugly"}
   ]
 }
 
@@ -207,6 +207,18 @@ import argparse
 # root = os.path.dirname(os.getcwd())
 root = os.path.dirname(os.path.realpath(__file__))
 
+def addition(field, kp):
+        with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+            cv = json.load(_in)
+            new_entry = {}
+            for x in kp:
+                new_entry[x]=input(kp[x])
+
+            cv[field].append(new_entry)
+
+        with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
+            _out.write(json.dumps(cv, indent=2))
+
 
 
 def main():
@@ -229,9 +241,9 @@ def main():
     # Argument to add features to JSON
     parser.add_argument('-a', '--add', choices=['skill', 'experience'], nargs=1, help="Add new skills, experience interactively.")
 
-    parser.add_argument('-as', '--add-skill', nargs='+', help="Specify any amount of skills")
 
-    parser.add_argument('-ae', '--add-experience', nargs='+', help="Specify any amount of experience")
+
+
 
     # Action starts HERE!
     args = parser.parse_args()
@@ -245,25 +257,19 @@ def main():
 
             # Getting user input...
             print("Skip field leaving blank & pressing ENTER.")
-            cli_name = input("Enter your full name\n> ")
-            cli_country = input("Residence - Enter the country you currently are on\n> ")
-            cli_city = input("Residence - Enter the city you currently live at\n> ")
-            cli_ext = input("Phone - Enter your area/country code (i.e.: 001 = USA, 503 = ESA)\n> ")
-            cli_phone = input("Phone - Enter your phone number\n> ")
-            cli_email = input("Email - Enter your e-mail address\n> ")
+            name = input("Enter your full name\n> ")
+            country = input("Residence - Enter the country you currently are on\n> ")
+            city = input("Residence - Enter the city you currently live at\n> ")
+            ext = input("Phone - Enter your area/country code (i.e.: 001 = USA, 503 = ESA)\n> ")
+            phone = input("Phone - Enter your phone number\n> ")
+            email = input("Email - Enter your e-mail address\n> ")
+            profile = input("Profile - 59-word description of yourself. Strengths only!\n> ")
 
-            # Validation...
-            name    = seed['name']    if cli_name=="" else cli_name
-            country = 'Country'       if cli_country=="" else cli_country
-            city    = 'City'          if cli_city=="" else cli_city
-            ext     = '+000'     if cli_ext=="" else f"+{cli_ext}"
-            phone   = seed['phone']   if cli_phone=="" else cli_phone
-            email   = seed['email']   if cli_email=="" else cli_email
-
-            seed['name']       = name    
-            seed['residence']  = f"{city}, {country}" 
-            seed['phone']      = f"{ext} {phone}"     
-            seed['email']      = email   
+            seed['name']      = seed['name'] if name=="" else name    
+            seed['residence'] = f"{'City' if city=='' else city}, {'Country' if country=='' else country}" 
+            seed['phone']     = f"{'+000' if ext=='' else f'+{ext}'} {'0000000' if phone=='' else phone}"     
+            seed['email']     = seed['email']   if email=="" else email   
+            seed['profile']   = seed['profile']   if profile=="" else profile   
 
             your_cv.write(json.dumps(seed, indent=2))
             print("your_cv.json successfully created! (now do:\ncvmaker your_cv.json).")
@@ -273,44 +279,17 @@ def main():
     if args.add:
         if args.add[0] == 'skill':
 
-            with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
-                cv = json.load(_in)
-                new_skill = input("Enter your new skill!\n> ")
-                cv['skills'].append(new_skill)
-
-            with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
-                _out.write(json.dumps(cv, indent=2))
+            addition('skills', {"skill":"Enter your new skill!\n>"} )
 
 
         if args.add[0] == 'experience':
+
+            addition('experience', {
+               "when":"When? i.e.: Jun 1996 - Dec 1999\n>",
+               "where":"Where? i.e.: Microsoft\n>",
+               "what":"what? i.e.: Front End Developer\n>"
+                } )
             
-            with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
-                cv = json.load(_in)
-                new_when = input("When? i.e.: Jun 1996 - Dec 1999\n> ")
-                new_where = input("Where? i.e.: Microsoft\n> ")
-                new_what = input("what? i.e.: Front End Developer\n> ")
-                cv['skills'].append({"when":new_when, "where":new_where, "what":new_what})
-
-            with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
-                _out.write(json.dumps(cv, indent=2))
-
-
-
-    if args.add_skill:
-
-            with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
-                cv = json.load(_in)
-                for x in args.add_skill:
-                    cv['skills'].append(x)
-
-            with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
-                _out.write(json.dumps(cv, indent=2))
-
-            
-
-
-
-
 
 
     sizes = ['33', '50', '100']
@@ -336,7 +315,7 @@ def main():
                 github=cv["github"],
                 linkedin=cv["linkedin"],
                 profile=cv["profile"],
-                skills = " ".join ([skills_template.format(skill=skill) for skill in cv["skills"]]),
+                skills = " ".join ([skills_template.format(skill=ability['skill']) for ability in cv["skills"]]),
                 certifications = " ".join([certs_template.format(link=cert['link'], image=cert['image'], description=cert['description'], img_size=img_size) for cert in cv["certifications"]]),
                 experience = " ".join([experience_template.format(when=exp['when'], where=exp['where'], what=exp['what'], description=exp['description']) for exp in cv['experience']])
 
@@ -348,7 +327,6 @@ def main():
 if __name__ == "__main__":
     main()
 
-#TODO add 'json generator flag'
 #TODO add json-feature interactive adder -a -add [certification, skill, etc.]
 #TODO add flag to specify card theme [primary info warning dark, etc...] text-color and header-color
-# Profile MUST BE 59 words or less
+#TODO change json structure 
