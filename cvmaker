@@ -213,7 +213,7 @@ def main():
     parser = argparse.ArgumentParser(description='Turn a JSON file into a cv! (1) Pipe the output to an HTML file. (2) Open it and do CTRL+P to generate a PDF out of it! ')
 
     # Positional argument for the file name
-    parser.add_argument('json', nargs='?', help='Name of the file')
+    parser.add_argument('json', nargs='?', help='Feed this script a JSON representing your cv. If you don\'t have one yet, use "cvmaker -n" to create one')
 
     # Optional argument to specify image size
     parser.add_argument('-i', '--image-size', type=int, help='Image size', choices=[0,1,2])
@@ -223,9 +223,15 @@ def main():
 "zephyr","yeti","vapor","united","superhero","spacelab","solar","slate","sketchy","simplex","sandstone","quartz","pulse",
 "morph","minty","materia","lux","lumen","litera","journal","flatly","darkly","cyborg","cerulean","cosmo"])
 
+    # Argument to create a JSON
     parser.add_argument('-n', '--new', action='store_true', help="Resulting json is your cv. Customise it as you see fit.")
 
+    # Argument to add features to JSON
+    parser.add_argument('-a', '--add', choices=['skill', 'experience'], nargs=1, help="Add new skills, experience interactively.")
 
+    parser.add_argument('-as', '--add-skill', nargs='+', help="Specify any amount of skills")
+
+    parser.add_argument('-ae', '--add-experience', nargs='+', help="Specify any amount of experience")
 
     # Action starts HERE!
     args = parser.parse_args()
@@ -239,12 +245,12 @@ def main():
 
             # Getting user input...
             print("Skip field leaving blank & pressing ENTER.")
-            cli_name = input("Enter your full name")
-            cli_country = input("Residence - Enter the country you currently are on")
-            cli_city = input("Residence - Enter the city you currently live at")
-            cli_ext = input("Phone - Enter your area/country code (i.e.: 001 = USA, 503 = ESA)")
-            cli_phone = input("Phone - Enter your phone number")
-            cli_email = input("Email - Enter your e-mail address")
+            cli_name = input("Enter your full name\n> ")
+            cli_country = input("Residence - Enter the country you currently are on\n> ")
+            cli_city = input("Residence - Enter the city you currently live at\n> ")
+            cli_ext = input("Phone - Enter your area/country code (i.e.: 001 = USA, 503 = ESA)\n> ")
+            cli_phone = input("Phone - Enter your phone number\n> ")
+            cli_email = input("Email - Enter your e-mail address\n> ")
 
             # Validation...
             name    = seed['name']    if cli_name=="" else cli_name
@@ -260,12 +266,47 @@ def main():
             seed['email']      = email   
 
             your_cv.write(json.dumps(seed, indent=2))
-            # new_cv = seed.format(name=name, country=country, city=city, ext=ext, phone=phone, email=email)
-            # your_cv.write(new_cv)
+            print("your_cv.json successfully created! (now do:\ncvmaker your_cv.json).")
 
 
-        exit(0)
+    
+    if args.add:
+        if args.add[0] == 'skill':
 
+            with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+                cv = json.load(_in)
+                new_skill = input("Enter your new skill!\n> ")
+                cv['skills'].append(new_skill)
+
+            with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
+                _out.write(json.dumps(cv, indent=2))
+
+
+        if args.add[0] == 'experience':
+            
+            with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+                cv = json.load(_in)
+                new_when = input("When? i.e.: Jun 1996 - Dec 1999\n> ")
+                new_where = input("Where? i.e.: Microsoft\n> ")
+                new_what = input("what? i.e.: Front End Developer\n> ")
+                cv['skills'].append({"when":new_when, "where":new_where, "what":new_what})
+
+            with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
+                _out.write(json.dumps(cv, indent=2))
+
+
+
+    if args.add_skill:
+
+            with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+                cv = json.load(_in)
+                for x in args.add_skill:
+                    cv['skills'].append(x)
+
+            with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
+                _out.write(json.dumps(cv, indent=2))
+
+            
 
 
 
