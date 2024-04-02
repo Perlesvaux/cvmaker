@@ -19,14 +19,19 @@ Use these settings for the best results:
 """
 
 
+  # "github": "Link_to_your_github_goes_here",
+  # "linkedin": "Link_to_your_linkedin_goes_here",
+
 seed = {
   "name": "Your_full_name_goes_here",
   "residence": "City, country",
   "phone": "+000 0000000",
   "email": "example@mail.com",
-  "github": "Link_to_your_github_goes_here",
-  "linkedin": "Link_to_your_linkedin_goes_here",
   "profile": "59-word description of who you are. i.e.: Front-End Developer. I specialize in React.js and love to fine-tune my own CSS whenever possible. UX before looks. I carefully study the documentation before starting to code. Effective communication is the way to get things done; clear code is the map, concise comments the compass",
+  "links": [
+      {"link":"https/...github", "color":"dark", "legend":"<i class='bi bi-github h1'></i>"},
+      {"link":"https/...linkedin", "color":"info", "legend":"<i class='bi bi-linkedin h1'></i>"}
+      ],
   "experience": [
     {"when":"Dec 2011 - Jan 2012",
      "where": "Place",
@@ -88,8 +93,8 @@ body = """
 
 
 <div class="card border-light mb-3">
-  <!-- <div class="card-header text-dark text-center">Name Goes Here</div> -->
-      <div class="card-header text-dark text-center h1"><i class="bi bi-person-fill"></i> <span class="px-2">{name}</span></div>
+  <!-- <div class="card-header {text_color} text-center">Name Goes Here</div> -->
+      <div class="card-header {text_color} text-center h1"><i class="bi bi-person-fill"></i> <span class="px-2">{name}</span></div>
 
   <div class="card-body">
     <ul class="list-group mb-3">
@@ -103,22 +108,22 @@ body = """
                 <i class="bi bi-envelope-fill"></i> <span class="px-2">{email}</span>
       </li>
     </ul>   
-   <div class="row">
-            <div class="col-6">
-    <a href="{github}" class="btn btn-dark btn-lg p-2  col-12 "><i class="bi bi-github h1"></i></a> 
+
+
+   <div class="d-flex justify-content-around">
+
+   {links}
+
   </div>
 
-            <div class="col-6">
-    <a href="{linkedin}" class="btn btn-info btn-lg p-2  col-12"><i class="bi bi-linkedin h1"></i></a> 
-  </div>
-  </div>
+
 
   </div>
 </div>
 
 
 <div class="card border-light mb-3">
-    <div class="card-header text-center h2 text-dark">Skills</div>
+    <div class="card-header text-center h2 {text_color}">Skills</div>
      <div class="card-body">
     <ul class="list-group">
       {skills}
@@ -128,7 +133,7 @@ body = """
 
 
 <div class="card border-light mb-3">
-    <div class="card-header text-center h2 text-dark">Profile</div>
+    <div class="card-header text-center h2 {text_color}">Profile</div>
      <div class="card-body">
         <div class="alert alert-dismissible alert-info">
             {profile}
@@ -139,7 +144,7 @@ body = """
 <div class="break"></div>
 
 <div class="card border-light mb-3">
-    <div class="card-header text-center h2 text-dark">Licenses & certifications</div>
+    <div class="card-header text-center h2 {text_color}">Licenses & certifications</div>
      <div class="card-body">
         <div class="container d-flex flex-wrap">
           {certifications}
@@ -152,7 +157,7 @@ body = """
 
 
 <div class="card border-light mb-3">
-    <div class="card-header text-center h2 text-dark">Experience</div>
+    <div class="card-header text-center h2 {text_color}">Experience</div>
      <div class="card-body">
 
     <ul class="list-group">
@@ -196,6 +201,10 @@ experience_template = """
    """
 
 
+links_template = "<a href='{link}' class='btn btn-{color} flex-fill m-2'>{legend}</a>" 
+
+
+
 
 import os
 import json
@@ -210,9 +219,11 @@ root = os.path.dirname(os.path.realpath(__file__))
 
 actions={
         'skill': lambda: addition('skills', {"skill":"Enter your new skill!\n>"} ),
-        'experience': lambda: addition('experience', {"when":"When? i.e.: Jun 1996 - Dec 1999\n>", "where":"Where? i.e.: Microsoft\n>", "what":"what? i.e.: Front End Developer\n>"}),
-        'cert': lambda: addition('certifications', {"description": "Describe what the certification is about\n> ", "image": "Add path to image. Paste with CTRL+Shift+V\n> ", "link": "Add link to certification. Paste with CTRL+Shift+V\n> "})
+        'experience': lambda: addition('experience', {"when":"When? i.e.: Jun 1996 - Dec 1999\n>", "where":"Where? i.e.: Microsoft\n>", "what":"what? i.e.: Front End Developer\n>", "description":"Please describe this role\n> "}),
+        'cert': lambda: addition('certifications', {"description": "Describe what the certification is about\n> ", "image": "Add path to image. Paste with CTRL+Shift+V\n> ", "link": "Add link to certification. Paste with CTRL+Shift+V\n> "}),
+        'link': lambda: addition('links', {"link":"Add link to certification. Paste with CTRL+Shift+V\n> ", "color": "Select color: light dark primary secondary success danger warning info\n> ", "legend": "Look for a cool icon here: https://icons.getbootstrap.com/ (Paste with CTRL+Shift+V)\n> "})
         }
+
 
 
     
@@ -245,7 +256,15 @@ def main():
     parser.add_argument('-n', '--new', action='store_true', help="Resulting json is your cv. Customise it as you see fit.")
 
     # Argument to add features to JSON
-    parser.add_argument('-a', '--add', choices=['skill', 'experience', 'cert'], nargs="?", help="Add new skills, experience interactively.")
+    parser.add_argument('-a', '--add', choices=['skill', 'experience', 'cert', 'link'], nargs="?", help="Add new skills, experience & certificates interactively.")
+
+    parser.add_argument('-t', '--text-color', choices=[
+        "light","dark","primary","secondary","success","danger","warning","info","body","muted","white","black-50","white-50"], nargs="?", help="Select text-color of headers")
+
+
+
+
+
 
 
 
@@ -253,6 +272,12 @@ def main():
 
     # Action starts HERE!
     args = parser.parse_args()
+
+
+
+
+
+
 
 
     # Initialize a cv.json. 
@@ -295,6 +320,8 @@ def main():
 
     icons = os.path.join(root, 'font', 'bootstrap-icons.css')
 
+    text_color = f"text-{args.text_color}" if args.text_color else "text-dark"
+
     if args.json:
 
         with open(args.json, 'r') as file, open(flavor) as css:
@@ -303,13 +330,13 @@ def main():
                 icons=icons,   
                 style=css.read(),    
                 pagebreak="@media print {.break {page-break-after: always;}}",
+                text_color=text_color,
                 name=cv["name"],
                 residence=cv["residence"],
                 phone=cv["phone"],
                 email=cv["email"],
-                github=cv["github"],
-                linkedin=cv["linkedin"],
                 profile=cv["profile"],
+                links= " ".join([links_template.format(link=social['link'], color=social['color'], legend=social['legend']) for social in cv["links"]]),
                 skills = " ".join ([skills_template.format(skill=ability['skill']) for ability in cv["skills"]]),
                 certifications = " ".join([certs_template.format(link=cert['link'], image=cert['image'], description=cert['description'], img_size=img_size) for cert in cv["certifications"]]),
                 experience = " ".join([experience_template.format(when=exp['when'], where=exp['where'], what=exp['what'], description=exp['description']) for exp in cv['experience']])
@@ -317,6 +344,8 @@ def main():
                 )
             print(result)
 
+                # github=cv["github"],
+                # linkedin=cv["linkedin"],
 
 
 if __name__ == "__main__":
