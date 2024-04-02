@@ -207,14 +207,18 @@ import argparse
 # root = os.path.dirname(os.getcwd())
 root = os.path.dirname(os.path.realpath(__file__))
 
-def addition(field, kp):
+
+actions={
+        'skills': lambda: addition('skills', {"skill":"Enter your new skill!\n>"} ),
+        'experience': lambda: addition('experience', {"when":"When? i.e.: Jun 1996 - Dec 1999\n>", "where":"Where? i.e.: Microsoft\n>", "what":"what? i.e.: Front End Developer\n>"})
+        }
+
+
+
+def addition(field, keys_and_prompts):
         with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
             cv = json.load(_in)
-            new_entry = {}
-            for x in kp:
-                new_entry[x]=input(kp[x])
-
-            cv[field].append(new_entry)
+            cv[field].append({key:input(prompt) for key,prompt in keys_and_prompts.items()})
 
         with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
             _out.write(json.dumps(cv, indent=2))
@@ -239,7 +243,7 @@ def main():
     parser.add_argument('-n', '--new', action='store_true', help="Resulting json is your cv. Customise it as you see fit.")
 
     # Argument to add features to JSON
-    parser.add_argument('-a', '--add', choices=['skill', 'experience'], nargs=1, help="Add new skills, experience interactively.")
+    parser.add_argument('-a', '--add', choices=['skills', 'experience'], nargs="?", help="Add new skills, experience interactively.")
 
 
 
@@ -275,21 +279,10 @@ def main():
             print("your_cv.json successfully created! (now do:\ncvmaker your_cv.json).")
 
 
+
     
     if args.add:
-        if args.add[0] == 'skill':
-
-            addition('skills', {"skill":"Enter your new skill!\n>"} )
-
-
-        if args.add[0] == 'experience':
-
-            addition('experience', {
-               "when":"When? i.e.: Jun 1996 - Dec 1999\n>",
-               "where":"Where? i.e.: Microsoft\n>",
-               "what":"what? i.e.: Front End Developer\n>"
-                } )
-            
+        actions.get(args.add)()
 
 
     sizes = ['33', '50', '100']
@@ -329,4 +322,4 @@ if __name__ == "__main__":
 
 #TODO add json-feature interactive adder -a -add [certification, skill, etc.]
 #TODO add flag to specify card theme [primary info warning dark, etc...] text-color and header-color
-#TODO change json structure 
+#TODO: Make a control panel (dict) to handle -a flag
