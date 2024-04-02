@@ -3,9 +3,19 @@
   "residence": "San Salvador, El Salvador",
   "phone": "+503 77462356",
   "email": "95fjpl95@gmail.com",
-  "github": "https://github.com/Perlesvaux",
-  "linkedin": "https://www.linkedin.com/in/francisco-pichinte-17a616272",
   "profile": "Full-Stack developer & Linux enthusiast with an eclectic background in humanities, psychology, literature and customer service.",
+  "links": [
+    {
+      "link":"https://github.com/Perlesvaux",
+      "color": "dark",
+      "legend": "<i class='bi bi-github h1'></i>"
+    },
+    {
+      "link": "https://www.linkedin.com/in/francisco-pichinte-17a616272",
+      "color": "info",
+      "legend": "<i class='bi bi-linkedin h1'></i>"
+    }
+  ],
   "experience": [
     {"when":"Apr 2016 – Jan 2018",
      "where": "Sykes",
