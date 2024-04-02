@@ -209,11 +209,13 @@ root = os.path.dirname(os.path.realpath(__file__))
 
 
 actions={
-        'skills': lambda: addition('skills', {"skill":"Enter your new skill!\n>"} ),
-        'experience': lambda: addition('experience', {"when":"When? i.e.: Jun 1996 - Dec 1999\n>", "where":"Where? i.e.: Microsoft\n>", "what":"what? i.e.: Front End Developer\n>"})
+        'skill': lambda: addition('skills', {"skill":"Enter your new skill!\n>"} ),
+        'experience': lambda: addition('experience', {"when":"When? i.e.: Jun 1996 - Dec 1999\n>", "where":"Where? i.e.: Microsoft\n>", "what":"what? i.e.: Front End Developer\n>"}),
+        'cert': lambda: addition('certifications', {"description": "Describe what the certification is about\n> ", "image": "Add path to image. Paste with CTRL+Shift+V\n> ", "link": "Add link to certification. Paste with CTRL+Shift+V\n> "})
         }
 
 
+    
 
 def addition(field, keys_and_prompts):
         with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
@@ -243,7 +245,7 @@ def main():
     parser.add_argument('-n', '--new', action='store_true', help="Resulting json is your cv. Customise it as you see fit.")
 
     # Argument to add features to JSON
-    parser.add_argument('-a', '--add', choices=['skills', 'experience'], nargs="?", help="Add new skills, experience interactively.")
+    parser.add_argument('-a', '--add', choices=['skill', 'experience', 'cert'], nargs="?", help="Add new skills, experience interactively.")
 
 
 
