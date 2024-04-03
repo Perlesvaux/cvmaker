@@ -225,16 +225,25 @@ actions={
         }
 
 
-
-    
-
 def addition(field, keys_and_prompts):
-        with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
-            cv = json.load(_in)
-            cv[field].append({key:input(prompt) for key,prompt in keys_and_prompts.items()})
+    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+        cv = json.load(_in)
+        cv[field].append({key:input(prompt) for key,prompt in keys_and_prompts.items()})
 
-        with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
-            _out.write(json.dumps(cv, indent=2))
+    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
+        _out.write(json.dumps(cv, indent=2))
+
+
+def change(field, index, attribute, new_value):
+    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+        cv = json.load(_in)
+        cv[field][index][attribute]=new_value
+
+    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
+        _out.write(json.dumps(cv, indent=2))
+
+
+
 
 
 
@@ -262,7 +271,17 @@ def main():
         "light","dark","primary","secondary","success","danger","warning","info","body","muted","white","black-50","white-50"], nargs="?", help="Select text-color of headers")
 
 
+    parser.add_argument('-c', '--change', choices=["skills", "experience", "links", "cert"], help="Update entries. Follow-up with an -i")
+    parser.add_argument('-e', '--entry',  choices=[-1, 0,1,2,3,4,5], type=int, help="Select index of entry you want to update. Follow-up with an -p")
+    parser.add_argument('-p', '--property', choices=['when', "what", "color", "skill"], help="Select the attribute you want to change. Follow-up a -v")
+    parser.add_argument('-v', '--value', help="Add here the new value.")
 
+    #TODO: CEPV => pending feature: UPDATING entries
+
+
+
+    
+        
 
 
 
@@ -275,6 +294,8 @@ def main():
 
 
 
+    if args.change and args.property and args.value:
+        change(args.change, args.entry, args.property, args.value)
 
 
 
@@ -351,6 +372,5 @@ def main():
 if __name__ == "__main__":
     main()
 
-#TODO add json-feature interactive adder -a -add [certification, skill, etc.]
 #TODO add flag to specify card theme [primary info warning dark, etc...] text-color and header-color
-#TODO: Make a control panel (dict) to handle -a flag
+#TODO add flag to modify specific entry-properties: script -c experience 1 when "new info"
