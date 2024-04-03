@@ -290,8 +290,8 @@ def main():
 
     parser.add_argument('-c', '--change', choices=[x for x in document], help="Update entries. Follow-up with an -i")
     args, _ = parser.parse_known_args()
-    parser.add_argument('-e', '--entry',  choices=entries[args.change], type=int, help="Select index of entry you want to update. Follow-up with an -p")
-    parser.add_argument('-p', '--property', choices=properties[args.change], help="Select the attribute you want to change. Follow-up a -v")
+    parser.add_argument('-e', '--entry', nargs='?', choices=entries.get(args.change), type=int, help="Select index of entry you want to update. Follow-up with an -p")
+    parser.add_argument('-p', '--property', choices=properties.get(args.change), help="Select the attribute you want to change. Follow-up a -v")
     args, _ = parser.parse_known_args()
     if args.property == 'color':
         parser.add_argument('-v', '--value', choices=["light","dark","primary","secondary","success","danger","warning","info"], help="Add here the new value.")
