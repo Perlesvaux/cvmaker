@@ -227,6 +227,20 @@ actions={
         'link': lambda: addition('links', {"link":"Add link to certification. Paste with CTRL+Shift+V\n> ", "color": "Select color: light dark primary secondary success danger warning info\n> ", "legend": "Look for a cool icon here: https://icons.getbootstrap.com/ (Paste with CTRL+Shift+V)\n> "})
         }
 
+properties={
+        'skills':['skill'],
+        'experience':['when', 'where', 'what', 'description'],
+        'certifications':['link', 'image', 'description'],
+        'links':['link', 'color', 'legend']
+        }
+
+entries={
+        'skills':range(len(document['skills'])),
+        'experience':range(len(document['experience'])),
+        'certifications':range(len(document['certifications'])),
+        'links':range(len(document['links']))
+        }
+
 
 def addition(field, keys_and_prompts):
     with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
@@ -275,9 +289,14 @@ def main():
 
 
     parser.add_argument('-c', '--change', choices=[x for x in document], help="Update entries. Follow-up with an -i")
-    parser.add_argument('-e', '--entry',  choices=[-1, 0,1,2,3,4,5], type=int, help="Select index of entry you want to update. Follow-up with an -p")
-    parser.add_argument('-p', '--property', choices=['when', "what", "color", "skill"], help="Select the attribute you want to change. Follow-up a -v")
-    parser.add_argument('-v', '--value', help="Add here the new value.")
+    args, _ = parser.parse_known_args()
+    parser.add_argument('-e', '--entry',  choices=entries[args.change], type=int, help="Select index of entry you want to update. Follow-up with an -p")
+    parser.add_argument('-p', '--property', choices=properties[args.change], help="Select the attribute you want to change. Follow-up a -v")
+    args, _ = parser.parse_known_args()
+    if args.property == 'color':
+        parser.add_argument('-v', '--value', choices=["light","dark","primary","secondary","success","danger","warning","info"], help="Add here the new value.")
+    else:
+        parser.add_argument('-v', '--value', help="Add here the new value.")
 
     #TODO: CEPV => pending feature: UPDATING entries
 
@@ -299,6 +318,7 @@ def main():
 
     if args.change and args.property and args.value:
         change(args.change, args.entry, args.property, args.value)
+        print("Entry updated successfully!")
 
 
 
