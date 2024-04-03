@@ -216,6 +216,9 @@ import argparse
 # root = os.path.dirname(os.getcwd())
 root = os.path.dirname(os.path.realpath(__file__))
 
+with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+    document = json.load(_in)
+
 
 actions={
         'skill': lambda: addition('skills', {"skill":"Enter your new skill!\n>"} ),
@@ -271,7 +274,7 @@ def main():
         "light","dark","primary","secondary","success","danger","warning","info","body","muted","white","black-50","white-50"], nargs="?", help="Select text-color of headers")
 
 
-    parser.add_argument('-c', '--change', choices=["skills", "experience", "links", "cert"], help="Update entries. Follow-up with an -i")
+    parser.add_argument('-c', '--change', choices=[x for x in document], help="Update entries. Follow-up with an -i")
     parser.add_argument('-e', '--entry',  choices=[-1, 0,1,2,3,4,5], type=int, help="Select index of entry you want to update. Follow-up with an -p")
     parser.add_argument('-p', '--property', choices=['when', "what", "color", "skill"], help="Select the attribute you want to change. Follow-up a -v")
     parser.add_argument('-v', '--value', help="Add here the new value.")
@@ -374,3 +377,4 @@ if __name__ == "__main__":
 
 #TODO add flag to specify card theme [primary info warning dark, etc...] text-color and header-color
 #TODO add flag to modify specific entry-properties: script -c experience 1 when "new info"
+#TODO add constrains
