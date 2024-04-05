@@ -1,33 +1,37 @@
 #!/usr/bin/env python3
 
-"""
+cli_description = """
 Turn a JSON file into a cv! 
-Initialize a JSON representation of your cv.
-Customize it as you see fit.
-Lastly, feed that JSON to this script like this:
+    $ cvmaker your_cv.json 
 
-    cvmaker CV.json 
+Initialize a JSON representation of your cv.
+    $ cvmaker -n
+
+Customize it as you see fit. Either manualy or through the CLI.
+
+Add a new skill, experience, link or certificate:
+    $ cvmaker -a experience
+
+Update an existing entry with CEPV (Change-Entry-Property-Value):
+    $ cvmaker -c links -e 0 -p description -v "New value for description property on first entry under links section "
 
 Open the resulting HTML file. Now do CTRL+P to generate a PDF out of it (i.e.: Destination -> Save to PDF)! 
 Use these settings for the best results:
-    Orientation -> Portrait
-    Margins -> None
-    Scale -> Default (or 'Fit to page width')
+   - Orientation -> Portrait
+   - Margins -> None
+   - Scale -> Default (or 'Fit to page width')
     
 ... Enjoy! =D
 
 """
 
 
-  # "github": "Link_to_your_github_goes_here",
-  # "linkedin": "Link_to_your_linkedin_goes_here",
-
 seed = {
-  "name": "Your_full_name_goes_here",
-  "residence": "City, country",
-  "phone": "+000 0000000",
-  "email": "example@mail.com",
-  "profile": "59-word description of who you are. i.e.: Front-End Developer. I specialize in React.js and love to fine-tune my own CSS whenever possible. UX before looks. I carefully study the documentation before starting to code. Effective communication is the way to get things done; clear code is the map, concise comments the compass",
+  "name":[{"entry": "Your_full_name_goes_here"}],
+  "residence":[{"entry": "City, country"}],
+  "phone":[{"entry": "+000 0000000"}],
+  "email":[{"entry": "example@mail.com"}],
+  "profile":[{"entry": "59-word description of who you are. i.e.: Front-End Developer. I specialize in React.js and love to fine-tune my own CSS whenever possible. UX before looks. I carefully study the documentation before starting to code. Effective communication is the way to get things done; clear code is the map, concise comments the compass"}],
   "links": [
       {"link":"https/...github", "color":"dark", "legend":"<i class='bi bi-github h1'></i>"},
       {"link":"https/...linkedin", "color":"info", "legend":"<i class='bi bi-linkedin h1'></i>"}
@@ -216,10 +220,13 @@ import argparse
 # root = os.path.dirname(os.getcwd())
 root = os.path.dirname(os.path.realpath(__file__))
 
-with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
-    document = json.load(_in)
+document = {}
 
+if os.path.exists(os.path.join(root, os.getcwd(), 'your_cv.json')):
+    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+        document = json.load(_in)
 
+# Control Panel
 actions={
         'skill': lambda: addition('skills', {"skill":"Enter your new skill!\n>"} ),
         'experience': lambda: addition('experience', {"when":"When? i.e.: Jun 1996 - Dec 1999\n>", "where":"Where? i.e.: Microsoft\n>", "what":"what? i.e.: Front End Developer\n>", "description":"Please describe this role\n> "}),
@@ -227,6 +234,7 @@ actions={
         'link': lambda: addition('links', {"link":"Add link to certification. Paste with CTRL+Shift+V\n> ", "color": "Select color: light dark primary secondary success danger warning info\n> ", "legend": "Look for a cool icon here: https://icons.getbootstrap.com/ (Paste with CTRL+Shift+V)\n> "})
         }
 
+# CLI choices
 properties={
         'skills':['skill'],
         'experience':['when', 'where', 'what', 'description'],
@@ -235,11 +243,21 @@ properties={
         }
 
 entries={
-        'skills':range(len(document['skills'])),
-        'experience':range(len(document['experience'])),
-        'certifications':range(len(document['certifications'])),
-        'links':range(len(document['links']))
+        'skills':range(len(document.get('skills')) if document.get('skills') else 0),
+        'experience':range(len(document.get('experience')) if document.get('experience') else 0),
+        'certifications':range(len(document.get('certifications')) if document.get('certifications') else 0),
+        'links':range(len(document.get('links')) if document.get('links') else 0)
         }
+
+textcolors=["light","dark","primary","secondary","success","danger","warning","info","body","muted","white","black-50","white-50"]
+
+backgrounds=[
+        'bg-primary', 'bg-secondary','bg-success','bg-danger','bg-warning','bg-info','bg-light','bg-dark',
+        'border-primary', 'border-secondary','border-success','border-danger','border-warning','border-info','border-light','border-dark'
+        ]
+
+flavors=["zephyr","yeti","vapor","united","superhero","spacelab","solar","slate","sketchy","simplex","sandstone","quartz","pulse",
+"morph","minty","materia","lux","lumen","litera","journal","flatly","darkly","cyborg","cerulean","cosmo"]
 
 
 def addition(field, keys_and_prompts):
@@ -274,9 +292,7 @@ def main():
     parser.add_argument('-i', '--image-size', type=int, help='Image size', choices=[0,1,2])
 
     # Optional argument to specify flavor
-    parser.add_argument('-f','--flavor', help='Flavor of the script', choices=[
-"zephyr","yeti","vapor","united","superhero","spacelab","solar","slate","sketchy","simplex","sandstone","quartz","pulse",
-"morph","minty","materia","lux","lumen","litera","journal","flatly","darkly","cyborg","cerulean","cosmo"])
+    parser.add_argument('-f','--flavor', help='Flavor of the script', choices=flavors)
 
     # Argument to create a JSON
     parser.add_argument('-n', '--new', action='store_true', help="Resulting json is your cv. Customise it as you see fit.")
@@ -284,11 +300,14 @@ def main():
     # Argument to add features to JSON
     parser.add_argument('-a', '--add', choices=['skill', 'experience', 'cert', 'link'], nargs="?", help="Add new skills, experience & certificates interactively.")
 
-    parser.add_argument('-t', '--text-color', choices=[
-        "light","dark","primary","secondary","success","danger","warning","info","body","muted","white","black-50","white-50"], nargs="?", help="Select text-color of headers")
+    parser.add_argument('-t', '--text-color', choices=textcolors, nargs="?", help="Select text-color of card-headers")
 
+    parser.add_argument('-b', '--background', choices=backgrounds, nargs="?", help="Select color of card-backgrounds ")
 
     parser.add_argument('-c', '--change', choices=[x for x in document], help="Update entries. Follow-up with an -i")
+
+    parser.add_argument('-he', '--help-extra', action="store_true", help="Display additional info")
+
     args, _ = parser.parse_known_args()
     parser.add_argument('-e', '--entry', nargs='?', choices=entries.get(args.change), type=int, help="Select index of entry you want to update. Follow-up with an -p")
     parser.add_argument('-p', '--property', choices=properties.get(args.change), help="Select the attribute you want to change. Follow-up a -v")
@@ -313,6 +332,10 @@ def main():
 
     # Action starts HERE!
     args = parser.parse_args()
+
+
+    if args.help_extra:
+        print(cli_description)
 
 
 
@@ -340,11 +363,11 @@ def main():
             email = input("Email - Enter your e-mail address\n> ")
             profile = input("Profile - 59-word description of yourself. Strengths only!\n> ")
 
-            seed['name']      = seed['name'] if name=="" else name    
-            seed['residence'] = f"{'City' if city=='' else city}, {'Country' if country=='' else country}" 
-            seed['phone']     = f"{'+000' if ext=='' else f'+{ext}'} {'0000000' if phone=='' else phone}"     
-            seed['email']     = seed['email']   if email=="" else email   
-            seed['profile']   = seed['profile']   if profile=="" else profile   
+            seed['name'][0]["entry"]      = seed['name'][0]["entry"] if name=="" else name    
+            seed['residence'][0]["entry"] = f"{'City' if city=='' else city}, {'Country' if country=='' else country}" 
+            seed['phone'][0]["entry"]     = f"{'+000' if ext=='' else f'+{ext}'} {'0000000' if phone=='' else phone}"     
+            seed['email'][0]["entry"]     = seed['email'][0]["entry"]   if email=="" else email   
+            seed['profile'][0]["entry"]   = seed['profile'][0]["entry"]   if profile=="" else profile   
 
             your_cv.write(json.dumps(seed, indent=2))
             print("your_cv.json successfully created! (now do:\ncvmaker your_cv.json).")
@@ -375,11 +398,11 @@ def main():
                 style=css.read(),    
                 pagebreak="@media print {.break {page-break-after: always;}}",
                 text_color=text_color,
-                name=cv["name"],
-                residence=cv["residence"],
-                phone=cv["phone"],
-                email=cv["email"],
-                profile=cv["profile"],
+                name=cv["name"][0]["entry"],
+                residence=cv["residence"][0]["entry"],
+                phone=cv["phone"][0]["entry"],
+                email=cv["email"][0]["entry"],
+                profile=cv["profile"][0]["entry"],
                 links= " ".join([links_template.format(link=social['link'], color=social['color'], legend=social['legend']) for social in cv["links"]]),
                 skills = " ".join ([skills_template.format(skill=ability['skill']) for ability in cv["skills"]]),
                 certifications = " ".join([certs_template.format(link=cert['link'], image=cert['image'], description=cert['description'], img_size=img_size) for cert in cv["certifications"]]),
@@ -396,5 +419,4 @@ if __name__ == "__main__":
     main()
 
 #TODO add flag to specify card theme [primary info warning dark, etc...] text-color and header-color
-#TODO add flag to modify specific entry-properties: script -c experience 1 when "new info"
-#TODO add constrains
+#TODO: instead of JUST showing index options 0-len, let's print the entry rows as well.
