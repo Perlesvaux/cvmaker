@@ -27,11 +27,11 @@ Use these settings for the best results:
 
 
 seed = {
-  "name":[{"entry": "Your_full_name_goes_here"}],
-  "residence":[{"entry": "City, country"}],
-  "phone":[{"entry": "+000 0000000"}],
-  "email":[{"entry": "example@mail.com"}],
-  "profile":[{"entry": "59-word description of who you are. i.e.: Front-End Developer. I specialize in React.js and love to fine-tune my own CSS whenever possible. UX before looks. I carefully study the documentation before starting to code. Effective communication is the way to get things done; clear code is the map, concise comments the compass"}],
+  "name":"Your_full_name_goes_here",
+  "residence":"City, country",
+  "phone":"+000 0000000",
+  "email":"example@mail.com",
+  "profile":"59-word description of who you are. i.e.: Front-End Developer. I specialize in React.js and love to fine-tune my own CSS whenever possible. UX before looks. I carefully study the documentation before starting to code. Effective communication is the way to get things done; clear code is the map, concise comments the compass",
   "links": [
       {"link":"https/...github", "color":"dark", "legend":"<i class='bi bi-github h1'></i>"},
       {"link":"https/...linkedin", "color":"info", "legend":"<i class='bi bi-linkedin h1'></i>"}
@@ -53,12 +53,12 @@ seed = {
     {"description":"Briefly_describe_what_cert_is_about", "image":"./path/to/image.png", "link": "https://drive.google.com/..."}
   ],
   "skills":[
-      {"skill":"<i class='bi bi-translate pe-2'></i>English_proficiency_and_any_other_language_you_speak_goes_here"},
-      {"skill":"<i class='bi bi-code-slash pe-2'></i>You_can_add_bootstrap_icons_and_add_some_padding_with_class_pe-2"},
-      {"skill":"https://icons.getbootstrap.com/"},
-      {"skill":"Customize_skill_set_as_you_see_fit"},
-      {"skill":"Add_soft_skills_if_you_want_as_well"},
-      {"skill":"Be_prudent_as_too_many_rows_can_make_the_final_document_somewhat_ugly"}
+      "<i class='bi bi-translate pe-2'></i>English_proficiency_and_any_other_language_you_speak_goes_here",
+      "<i class='bi bi-code-slash pe-2'></i>You_can_add_bootstrap_icons_and_add_some_padding_with_class_pe-2",
+      "https://icons.getbootstrap.com/",
+      "Customize_skill_set_as_you_see_fit",
+      "Add_soft_skills_if_you_want_as_well",
+      "Be_prudent_as_too_many_rows_can_make_the_final_document_somewhat_ugly"
   ]
 }
 
@@ -228,7 +228,7 @@ if os.path.exists(os.path.join(root, os.getcwd(), 'your_cv.json')):
 
 # Control Panel
 actions={
-        'skill': lambda: addition('skills', {"skill":"Enter your new skill!\n>"} ),
+        'skill': lambda: adding('skills', "Enter your new skill!\n>"),
         'experience': lambda: addition('experience', {"when":"When? i.e.: Jun 1996 - Dec 1999\n>", "where":"Where? i.e.: Microsoft\n>", "what":"what? i.e.: Front End Developer\n>", "description":"Please describe this role\n> "}),
         'cert': lambda: addition('certifications', {"description": "Describe what the certification is about\n> ", "image": "Add path to image. Paste with CTRL+Shift+V\n> ", "link": "Add link to certification. Paste with CTRL+Shift+V\n> "}),
         'link': lambda: addition('links', {"link":"Add link to certification. Paste with CTRL+Shift+V\n> ", "color": "Select color: light dark primary secondary success danger warning info\n> ", "legend": "Look for a cool icon here: https://icons.getbootstrap.com/ (Paste with CTRL+Shift+V)\n> "})
@@ -236,7 +236,7 @@ actions={
 
 # CLI choices
 properties={
-        'skills':['skill'],
+        # 'skills':['skill'],
         'experience':['when', 'where', 'what', 'description'],
         'certifications':['link', 'image', 'description'],
         'links':['link', 'color', 'legend']
@@ -260,6 +260,7 @@ flavors=["zephyr","yeti","vapor","united","superhero","spacelab","solar","slate"
 "morph","minty","materia","lux","lumen","litera","journal","flatly","darkly","cyborg","cerulean","cosmo"]
 
 
+# JSON property added here is a list of objects with keys
 def addition(field, keys_and_prompts):
     with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
         cv = json.load(_in)
@@ -269,6 +270,17 @@ def addition(field, keys_and_prompts):
         _out.write(json.dumps(cv, indent=2))
 
 
+# JSON property added here is a list of primitives
+def adding(field, prompt):
+    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+        cv = json.load(_in)
+        cv[field].append(input(prompt))
+
+    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
+        _out.write(json.dumps(cv, indent=2))
+
+
+#JSON property changed here is a list of objects with n number of keys
 def change(field, index, attribute, new_value):
     with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
         cv = json.load(_in)
@@ -278,7 +290,24 @@ def change(field, index, attribute, new_value):
         _out.write(json.dumps(cv, indent=2))
 
 
+#JSON property changed here is a list of primitives.
+def alter(field, index, new_value):
+    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+        cv = json.load(_in)
+        cv[field][index]=new_value
 
+    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
+        _out.write(json.dumps(cv, indent=2))
+
+
+#JSON property changed here is a primitive.
+def update(field, new_value):
+    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+        cv = json.load(_in)
+        cv[field]=new_value
+
+    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
+        _out.write(json.dumps(cv, indent=2))
 
 
 
@@ -305,10 +334,15 @@ def main():
     parser.add_argument('-b', '--background', choices=backgrounds, nargs="?", help="Select color of card-backgrounds ")
 
     parser.add_argument('-c', '--change', choices=[x for x in document], help="Update entries. Follow-up with an -i")
-
+    
     parser.add_argument('-he', '--help-extra', action="store_true", help="Display additional info")
 
     args, _ = parser.parse_known_args()
+    
+    # if args.change in {"name", "email", "residence", "phone", "profile", "skills"}:
+        
+
+
     parser.add_argument('-e', '--entry', nargs='?', choices=entries.get(args.change), type=int, help="Select index of entry you want to update. Follow-up with an -p")
     parser.add_argument('-p', '--property', choices=properties.get(args.change), help="Select the attribute you want to change. Follow-up a -v")
     args, _ = parser.parse_known_args()
@@ -318,6 +352,8 @@ def main():
         parser.add_argument('-v', '--value', help="Add here the new value.")
 
     #TODO: CEPV => pending feature: UPDATING entries
+
+    
 
 
 
@@ -339,12 +375,22 @@ def main():
 
 
 
-    if args.change and args.property and args.value:
+    if args.change and args.property and args.value and isinstance(args.entry, int):
         change(args.change, args.entry, args.property, args.value)
+        print("Entry changed successfully!")
+        exit(0)
+
+
+    if args.change and isinstance(args.entry, int) and args.value:
+        alter(args.change, args.entry, args.value)
+        print("Entry altered successfully!")
+        exit(0)
+
+
+    if args.change in {"name", "email", "residence", "phone", "profile"} and args.value:
+        update(args.change, args.value)
         print("Entry updated successfully!")
-
-
-
+        exit(0)
 
 
     # Initialize a cv.json. 
@@ -363,11 +409,11 @@ def main():
             email = input("Email - Enter your e-mail address\n> ")
             profile = input("Profile - 59-word description of yourself. Strengths only!\n> ")
 
-            seed['name'][0]["entry"]      = seed['name'][0]["entry"] if name=="" else name    
-            seed['residence'][0]["entry"] = f"{'City' if city=='' else city}, {'Country' if country=='' else country}" 
-            seed['phone'][0]["entry"]     = f"{'+000' if ext=='' else f'+{ext}'} {'0000000' if phone=='' else phone}"     
-            seed['email'][0]["entry"]     = seed['email'][0]["entry"]   if email=="" else email   
-            seed['profile'][0]["entry"]   = seed['profile'][0]["entry"]   if profile=="" else profile   
+            seed['name']      = seed['name'] if name=="" else name    
+            seed['residence'] = f"{'City' if city=='' else city}, {'Country' if country=='' else country}" 
+            seed['phone']     = f"{'+000' if ext=='' else f'+{ext}'} {'0000000' if phone=='' else phone}"     
+            seed['email']     = seed['email']   if email=="" else email   
+            seed['profile']   = seed['profile']   if profile=="" else profile   
 
             your_cv.write(json.dumps(seed, indent=2))
             print("your_cv.json successfully created! (now do:\ncvmaker your_cv.json).")
@@ -398,13 +444,13 @@ def main():
                 style=css.read(),    
                 pagebreak="@media print {.break {page-break-after: always;}}",
                 text_color=text_color,
-                name=cv["name"][0]["entry"],
-                residence=cv["residence"][0]["entry"],
-                phone=cv["phone"][0]["entry"],
-                email=cv["email"][0]["entry"],
-                profile=cv["profile"][0]["entry"],
+                name=cv["name"],
+                residence=cv["residence"],
+                phone=cv["phone"],
+                email=cv["email"],
+                profile=cv["profile"],
                 links= " ".join([links_template.format(link=social['link'], color=social['color'], legend=social['legend']) for social in cv["links"]]),
-                skills = " ".join ([skills_template.format(skill=ability['skill']) for ability in cv["skills"]]),
+                skills = " ".join ([skills_template.format(skill=ability) for ability in cv["skills"]]),
                 certifications = " ".join([certs_template.format(link=cert['link'], image=cert['image'], description=cert['description'], img_size=img_size) for cert in cv["certifications"]]),
                 experience = " ".join([experience_template.format(when=exp['when'], where=exp['where'], what=exp['what'], description=exp['description']) for exp in cv['experience']])
 
