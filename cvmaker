@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+import os
+import json
+import argparse
+
 
 cli_description = """
 Turn a JSON file into a cv! 
@@ -104,8 +108,6 @@ body = """
 
     <style>
 
-    
-
     {pagebreak}
 
     {style}
@@ -192,10 +194,6 @@ body = """
       </div>
 </div>
 
-
-
-
-
 </body>
 </html>
 
@@ -229,22 +227,14 @@ experience_template = """
 links_template = "<a href='{link}' class='btn btn-{color} flex-fill m-2'>{legend}</a>" 
 
 
-
-
-import os
-import json
-
-import argparse
-
-
-# root = os.path.dirname(os.path.abspath(__file__))
-# root = os.path.dirname(os.getcwd())
 root = os.path.dirname(os.path.realpath(__file__))
+
+target_json = os.path.join(root, os.getcwd(), 'your_cv.json')
 
 document = {}
 
-if os.path.exists(os.path.join(root, os.getcwd(), 'your_cv.json')):
-    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+if os.path.exists(target_json):
+    with open(target_json, 'r') as _in: 
         document = json.load(_in)
 
 # Control Panel
@@ -283,51 +273,51 @@ flavors=["zephyr","yeti","vapor","united","superhero","spacelab","solar","slate"
 
 # JSON property added here is a list of objects with keys
 def addition(field, keys_and_prompts):
-    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+    with open(target_json, 'r') as _in: 
         cv = json.load(_in)
         cv[field].append({key:input(prompt) for key,prompt in keys_and_prompts.items()})
 
-    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
+    with open(target_json, 'w') as _out:
         _out.write(json.dumps(cv, indent=2))
 
 
 # JSON property added here is a list of primitives
 def adding(field, prompt):
-    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+    with open(target_json, 'r') as _in: 
         cv = json.load(_in)
         cv[field].append(input(prompt))
 
-    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
+    with open(target_json, 'w') as _out:
         _out.write(json.dumps(cv, indent=2))
 
 
 #JSON property changed here is a list of objects with n number of keys
 def change(field, index, attribute, new_value):
-    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+    with open(target_json, 'r') as _in: 
         cv = json.load(_in)
         cv[field][index][attribute]=new_value
 
-    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
+    with open(target_json, 'w') as _out:
         _out.write(json.dumps(cv, indent=2))
 
 
 #JSON property changed here is a list of primitives.
 def alter(field, index, new_value):
-    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+    with open(target_json, 'r') as _in: 
         cv = json.load(_in)
         cv[field][index]=new_value
 
-    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
+    with open(target_json, 'w') as _out:
         _out.write(json.dumps(cv, indent=2))
 
 
 #JSON property changed here is a primitive.
 def update(field, new_value):
-    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'r') as _in: 
+    with open(target_json, 'r') as _in: 
         cv = json.load(_in)
         cv[field]=new_value
 
-    with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'w') as _out:
+    with open(target_json, 'w') as _out:
         _out.write(json.dumps(cv, indent=2))
 
 
@@ -358,7 +348,7 @@ def main():
     
     parser.add_argument('-he', '--help-extra', action="store_true", help="Display additional info")
 
-    parser.add_argument('-c', '--change', choices=[x for x in document], help="Update entries. Follow-up with an -i")
+    parser.add_argument('-c', '--change', choices=[x for x in document], help="Update entries. Follow-up with an -e")
 
     args, _ = parser.parse_known_args()
     
@@ -366,8 +356,8 @@ def main():
         
 
 
-    parser.add_argument('-e', '--entry', nargs='?', choices=entries.get(args.change), type=int, help="Select index of entry you want to update. Follow-up with an -p")
-    parser.add_argument('-p', '--property', choices=properties.get(args.change), help="Select the attribute you want to change. Follow-up a -v")
+    parser.add_argument('-e', '--entry', nargs='?', choices=entries.get(args.change), type=int, help="Select index of entry you want to update.")
+    parser.add_argument('-p', '--property', choices=properties.get(args.change), help="Select the attribute you want to change. Follow-up with a -v")
     args, _ = parser.parse_known_args()
     if args.property == 'color':
         parser.add_argument('-v', '--value', choices=["light","dark","primary","secondary","success","danger","warning","info"], help="Add here the new value.")
@@ -398,13 +388,13 @@ def main():
 
 
 
-    if args.change and args.property and args.value and isinstance(args.entry, int):
+    if args.change in {'links', 'experience', 'certifications'} and args.property and args.value and isinstance(args.entry, int):
         change(args.change, args.entry, args.property, args.value)
         print("Entry changed successfully!")
         exit(0)
 
 
-    if args.change and isinstance(args.entry, int) and args.value:
+    if args.change in {'skills'} and isinstance(args.entry, int) and args.value:
         alter(args.change, args.entry, args.value)
         print("Entry altered successfully!")
         exit(0)
@@ -420,7 +410,7 @@ def main():
     if args.whole:
         print(f"new cv will be created here: {os.path.join(root, os.getcwd())}!")
 
-        with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'x') as your_cv:
+        with open(target_json, 'x') as your_cv:
             your_cv.write(json.dumps(large_seed, indent=2))
             print("your_cv.json successfully created! (now do:\ncvmaker your_cv.json).")
 
@@ -428,7 +418,7 @@ def main():
     if args.new:
         print(f"new cv will be created here: {os.path.join(root, os.getcwd())}!")
 
-        with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'x') as your_cv:
+        with open(target_json, 'x') as your_cv:
 
             # Getting user input...
             print("Skip field leaving blank & pressing ENTER.")
@@ -498,4 +488,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-#TODO add flag to specify card theme [primary info warning dark, etc...] text-color and header-color
