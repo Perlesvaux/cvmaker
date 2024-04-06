@@ -50,13 +50,17 @@ cvmaker -c name -v "John Doe"
 ```
 
 # Installation
+Call script from anywhere!
 ```bash
 mkdir ~/bin
-echo "export PATH=$PATH:$HOME/bin/" >> ~/.bashrc
+echo 'export PATH=$PATH:$HOME/bin/' >> ~/.bashrc
+```
+
+Clone repository, make it executable, link script to ~/bin folder
+```bash
 git clone https://github.com/Perlesvaux/cvmaker
 cd cvmaker
 chmod +x cvmaker
 ln -s $(realpath cvmaker) ~/bin/cvmaker
 
 ```
-
