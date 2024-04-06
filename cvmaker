@@ -2,24 +2,29 @@
 
 cli_description = """
 Turn a JSON file into a cv! 
-    $ cvmaker your_cv.json 
 
-Initialize a JSON representation of your cv.
+Redirect the ouput to a file!
+    $ cvmaker your_cv.json > index.html
+
+Customize its looks! i.e.:
+Image-size=2, Text-color=success, background-color=bg-success, flavor=quartz 
+    $ cvmaker your_cv.json -i 2 -t warning -b border-dark -f quartz > index.html
+
+1) Initialize a JSON representation of your cv.
     $ cvmaker -n
 
-Customize it as you see fit. Either manualy or through the CLI.
-
-Add a new skill, experience, link or certificate:
+2) Add a new skill, experience, link or certificate:
     $ cvmaker -a experience
 
-Update an existing entry with CEPV (Change-Entry-Property-Value):
+3) Update an existing entry with flags {Create, Entry, Property, Value}:
     $ cvmaker -c links -e 0 -p description -v "New value for description property on first entry under links section "
 
     $ cvmaker -c skills -e 1 -v "Updated skill!"
 
     $ cvmaker -c name -v "John Doe"
 
-Open the resulting HTML file. Now do CTRL+P to generate a PDF out of it (i.e.: Destination -> Save to PDF)! 
+
+Open the resulting HTML file. Now do CTRL+P to generate a PDF out of it! (i.e.: Destination -> Save to PDF) 
 Use these settings for the best results:
    - Orientation -> Portrait
    - Margins -> None
@@ -100,7 +105,7 @@ body = """
 <body>
 
 
-<div class="card border-light mb-3">
+<div class="card {background_color} mb-3">
   <!-- <div class="card-header {text_color} text-center">Name Goes Here</div> -->
       <div class="card-header {text_color} text-center h1"><i class="bi bi-person-fill"></i> <span class="px-2">{name}</span></div>
 
@@ -130,7 +135,7 @@ body = """
 </div>
 
 
-<div class="card border-light mb-3">
+<div class="card {background_color} mb-3">
     <div class="card-header text-center h2 {text_color}">Skills</div>
      <div class="card-body">
     <ul class="list-group">
@@ -140,7 +145,7 @@ body = """
 </div>
 
 
-<div class="card border-light mb-3">
+<div class="card {background_color} mb-3">
     <div class="card-header text-center h2 {text_color}">Profile</div>
      <div class="card-body">
         <div class="alert alert-dismissible alert-info">
@@ -151,7 +156,7 @@ body = """
 
 <div class="break"></div>
 
-<div class="card border-light mb-3">
+<div class="card {background_color} mb-3">
     <div class="card-header text-center h2 {text_color}">Licenses & certifications</div>
      <div class="card-body">
         <div class="container d-flex flex-wrap">
@@ -164,7 +169,7 @@ body = """
 <div class="break"></div>
 
 
-<div class="card border-light mb-3">
+<div class="card {background_color} mb-3">
     <div class="card-header text-center h2 {text_color}">Experience</div>
      <div class="card-body">
 
@@ -188,7 +193,7 @@ body = """
 skills_template = """<li class='list-group-item list-group-item-success d-flex'>{skill}</li>"""
 certs_template = """
 
-          <div class='card border-light' style='height:{img_size}%;width:{img_size}%;'>
+          <div class='card {background_color}' style='height:{img_size}%;width:{img_size}%;'>
             <div class="card-body" >
               <div><a href='{link}'><img style="height:100%;width:100%; class="border border-dark" src='{image}' alt="{description}"></a></div>
             </div>
@@ -430,6 +435,8 @@ def main():
         print("Entry added successfully!")
 
 
+
+#Sensible defaults
     sizes = ['33', '50', '100']
 
     img_size = sizes[args.image_size] if args.image_size else '33'
@@ -440,6 +447,8 @@ def main():
 
     text_color = f"text-{args.text_color}" if args.text_color else "text-dark"
 
+    background_color = args.background if args.background else "border-light"
+
     if args.json:
 
         with open(args.json, 'r') as file, open(flavor) as css:
@@ -449,6 +458,7 @@ def main():
                 style=css.read(),    
                 pagebreak="@media print {.break {page-break-after: always;}}",
                 text_color=text_color,
+                background_color=background_color,
                 name=cv["name"],
                 residence=cv["residence"],
                 phone=cv["phone"],
@@ -456,18 +466,14 @@ def main():
                 profile=cv["profile"],
                 links= " ".join([links_template.format(link=social['link'], color=social['color'], legend=social['legend']) for social in cv["links"]]),
                 skills = " ".join ([skills_template.format(skill=ability) for ability in cv["skills"]]),
-                certifications = " ".join([certs_template.format(link=cert['link'], image=cert['image'], description=cert['description'], img_size=img_size) for cert in cv["certifications"]]),
+                certifications = " ".join([certs_template.format(background_color=background_color, link=cert['link'], image=cert['image'], description=cert['description'], img_size=img_size) for cert in cv["certifications"]]),
                 experience = " ".join([experience_template.format(when=exp['when'], where=exp['where'], what=exp['what'], description=exp['description']) for exp in cv['experience']])
 
                 )
             print(result)
-
-                # github=cv["github"],
-                # linkedin=cv["linkedin"],
 
 
 if __name__ == "__main__":
     main()
 
 #TODO add flag to specify card theme [primary info warning dark, etc...] text-color and header-color
-#TODO: instead of JUST showing index options 0-len, let's print the entry rows as well.
