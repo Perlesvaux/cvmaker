@@ -334,47 +334,43 @@ def main():
     # Optional argument to specify flavor
     parser.add_argument('-f','--flavor', help='Flavor of the script', choices=flavors)
 
-    # Argument to create a JSON
+    # Optional argument to create a JSON - Minimal version
     parser.add_argument('-n', '--new', action='store_true', help="Resulting json is your cv. Use -a flag to add new entries.")
 
+    # Optional argument to create a JSON - Whole version
     parser.add_argument('-w', '--whole', action='store_true', help="Resulting json is your cv. Customise it as you see fit.")
 
-    # Argument to add features to JSON
+    # Optional argument to add properties to JSON
     parser.add_argument('-a', '--add', choices=['skill', 'experience', 'cert', 'link'], nargs="?", help="Add new skills, experience & certificates interactively.")
 
+    # Optional argument to change card-header theme at runtime
     parser.add_argument('-t', '--text-color', choices=textcolors, nargs="?", help="Select text-color of card-headers")
 
+    # Optional argument to change card-background theme at runtime
     parser.add_argument('-b', '--background', choices=backgrounds, nargs="?", help="Select color of card-backgrounds ")
     
+    # Optional argument to display additional info about how to use the CLI
     parser.add_argument('-he', '--help-extra', action="store_true", help="Display additional info")
 
+    
+    #CEPV - sequence of optional arguments to update entries... Specify field to CHANGE
     parser.add_argument('-c', '--change', choices=[x for x in document], help="Update entries. Follow-up with an -e")
 
+    # checks what flags have already been parsed. Used for computing choices below
     args, _ = parser.parse_known_args()
-    
-    # if args.change in {"name", "email", "residence", "phone", "profile", "skills"}:
-        
 
-
+    # ... Specify ENTRY to change
     parser.add_argument('-e', '--entry', nargs='?', choices=entries.get(args.change), type=int, help="Select index of entry you want to update.")
+
+    # ... Specify PROPERTY to change (if any)
     parser.add_argument('-p', '--property', choices=properties.get(args.change), help="Select the attribute you want to change. Follow-up with a -v")
+
+    # ... Speficy new VALUE (if property=color, possible values are reduced to only valid options)
     args, _ = parser.parse_known_args()
     if args.property == 'color':
         parser.add_argument('-v', '--value', choices=["light","dark","primary","secondary","success","danger","warning","info"], help="Add here the new value.")
     else:
         parser.add_argument('-v', '--value', help="Add here the new value.")
-
-    #TODO: CEPV => pending feature: UPDATING entries
-
-    
-
-
-
-    
-        
-
-
-
 
 
 
@@ -390,19 +386,19 @@ def main():
 
     if args.change in {'links', 'experience', 'certifications'} and args.property and args.value and isinstance(args.entry, int):
         change(args.change, args.entry, args.property, args.value)
-        print("Entry changed successfully!")
+        print(f"Field \"{args.change}\", entry n={args.entry}, property \"{args.property}\" updated successfully!")
         exit(0)
 
 
     if args.change in {'skills'} and isinstance(args.entry, int) and args.value:
         alter(args.change, args.entry, args.value)
-        print("Entry altered successfully!")
+        print(f"Field \"{args.change}\", entry n={args.entry} updated successfully!")
         exit(0)
 
 
     if args.change in {"name", "email", "residence", "phone", "profile"} and args.value:
         update(args.change, args.value)
-        print("Entry updated successfully!")
+        print(f"Field \"{args.change}\" updated successfully!")
         exit(0)
 
 
@@ -444,7 +440,7 @@ def main():
     
     if args.add:
         actions.get(args.add)()
-        print("Entry added successfully!")
+        print("New entry added to \"{args.add}\" successfully!")
 
 
 
