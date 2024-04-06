@@ -15,6 +15,10 @@ Add a new skill, experience, link or certificate:
 Update an existing entry with CEPV (Change-Entry-Property-Value):
     $ cvmaker -c links -e 0 -p description -v "New value for description property on first entry under links section "
 
+    $ cvmaker -c skills -e 1 -v "Updated skill!"
+
+    $ cvmaker -c name -v "John Doe"
+
 Open the resulting HTML file. Now do CTRL+P to generate a PDF out of it (i.e.: Destination -> Save to PDF)! 
 Use these settings for the best results:
    - Orientation -> Portrait
@@ -423,6 +427,7 @@ def main():
     
     if args.add:
         actions.get(args.add)()
+        print("Entry added successfully!")
 
 
     sizes = ['33', '50', '100']
