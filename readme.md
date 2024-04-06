@@ -40,7 +40,7 @@ cvmaker -c skills -e 1 -v "Updated skill!"
 cvmaker -c name -v "John Doe"
 ```
 
-Open the resulting HTML file. Now do CTRL+P to generate a PDF out of it! (i.e.: Destination -> Save to PDF) 
+Open the resulting HTML file. Now do CTRL+P to generate a PDF out of it! (i.e.: Destination -> **Save to PDF**) 
 Use these settings for the best results.
 - Orientation : Portrait
 - Margins : None
