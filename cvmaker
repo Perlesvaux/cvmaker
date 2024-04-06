@@ -11,7 +11,11 @@ Image-size=2, Text-color=success, background-color=bg-success, flavor=quartz
     $ cvmaker your_cv.json -i 2 -t warning -b border-dark -f quartz > index.html
 
 1) Initialize a JSON representation of your cv.
-    $ cvmaker -n
+    Whole JSON (recommended)
+    $ cvmaker -w 
+
+    Minimal JSON
+    $ cvmaker -n  
 
 2) Add a new skill, experience, link or certificate:
     $ cvmaker -a experience
@@ -35,7 +39,7 @@ Use these settings for the best results:
 """
 
 
-seed = {
+large_seed = {
   "name":"Your_full_name_goes_here",
   "residence":"City, country",
   "phone":"+000 0000000",
@@ -72,9 +76,17 @@ seed = {
 }
 
 
-
-
-
+seed = {
+  "name":"Your_full_name_goes_here",
+  "residence":"City, country",
+  "phone":"+000 0000000",
+  "email":"example@mail.com",
+  "profile":"59-word description of who you are. i.e.: Front-End Developer. I specialize in React.js and love to fine-tune my own CSS whenever possible. UX before looks. I carefully study the documentation before starting to code. Effective communication is the way to get things done; clear code is the map, concise comments the compass",
+  "links":[],
+  "experience":[],
+  "certifications":[],
+  "skills":[]
+}
 
 
 body = """
@@ -333,7 +345,9 @@ def main():
     parser.add_argument('-f','--flavor', help='Flavor of the script', choices=flavors)
 
     # Argument to create a JSON
-    parser.add_argument('-n', '--new', action='store_true', help="Resulting json is your cv. Customise it as you see fit.")
+    parser.add_argument('-n', '--new', action='store_true', help="Resulting json is your cv. Use -a flag to add new entries.")
+
+    parser.add_argument('-w', '--whole', action='store_true', help="Resulting json is your cv. Customise it as you see fit.")
 
     # Argument to add features to JSON
     parser.add_argument('-a', '--add', choices=['skill', 'experience', 'cert', 'link'], nargs="?", help="Add new skills, experience & certificates interactively.")
@@ -341,10 +355,10 @@ def main():
     parser.add_argument('-t', '--text-color', choices=textcolors, nargs="?", help="Select text-color of card-headers")
 
     parser.add_argument('-b', '--background', choices=backgrounds, nargs="?", help="Select color of card-backgrounds ")
-
-    parser.add_argument('-c', '--change', choices=[x for x in document], help="Update entries. Follow-up with an -i")
     
     parser.add_argument('-he', '--help-extra', action="store_true", help="Display additional info")
+
+    parser.add_argument('-c', '--change', choices=[x for x in document], help="Update entries. Follow-up with an -i")
 
     args, _ = parser.parse_known_args()
     
@@ -403,8 +417,16 @@ def main():
 
 
     # Initialize a cv.json. 
+    if args.whole:
+        print(f"new cv will be created here: {os.path.join(root, os.getcwd())}!")
+
+        with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'x') as your_cv:
+            your_cv.write(json.dumps(large_seed, indent=2))
+            print("your_cv.json successfully created! (now do:\ncvmaker your_cv.json).")
+
+
     if args.new:
-        print(f"new flag activated here: {os.path.join(root, os.getcwd())}!")
+        print(f"new cv will be created here: {os.path.join(root, os.getcwd())}!")
 
         with open(os.path.join(root, os.getcwd(), 'your_cv.json'), 'x') as your_cv:
 
