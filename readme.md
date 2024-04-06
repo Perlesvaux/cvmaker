@@ -1,6 +1,6 @@
 # Turn a JSON file into a cv! 
 
-##### Quick start!
+## Quick start!
 ```bash
 # Initialize JSON representation of your CV 
 cvmaker -w
