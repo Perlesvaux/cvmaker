@@ -60,11 +60,11 @@
   {"description":"G4 Award for outstanding performance 4 months straight", "image":"./certs/g4_5.png", "link": "https://drive.google.com/file/d/1H2vtBgQYj_Uqoi9rANHQqJeIhMzf11t9/view?usp=drive_link"}
   ],
   "skills":[
-  {"skill":"<i class='bi bi-translate pe-2'></i>C2 English Proficiency, Native Spanish Speaker"},
-  {"skill":"<i class='bi bi-code-slash pe-2'></i>Python, Bash, JavaScript, Java, C#"},
-  {"skill":"<i class='bi bi-window-stack pe-2'></i>CSS, HTML5, Bootstrap & React"},
-  {"skill":"<i class='bi bi-server pe-2'></i>Flask, SpringBoot, Laravel, .NET, ASP.NET, Express, Node"},
-  {"skill":"<i class='bi bi-database-check pe-2'></i> MySQL, SQL, SQLite, MongoDB"}
+  "<i class='bi bi-translate pe-2'></i>C2 English Proficiency, Native Spanish Speaker",
+  "<i class='bi bi-code-slash pe-2'></i>Python, Bash, JavaScript, Java, C#",
+  "<i class='bi bi-window-stack pe-2'></i>CSS, HTML5, Bootstrap & React",
+  "<i class='bi bi-server pe-2'></i>Flask, SpringBoot, Laravel, .NET, ASP.NET, Express, Node",
+  "<i class='bi bi-database-check pe-2'></i> MySQL, SQL, SQLite, MongoDB"
   ]
 
 
