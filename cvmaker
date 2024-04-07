@@ -440,7 +440,7 @@ def main():
     
     if args.add:
         actions.get(args.add)()
-        print("New entry added to \"{args.add}\" successfully!")
+        print(f"New entry added to \"{args.add}\" successfully!")
 
 
 
