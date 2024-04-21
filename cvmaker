@@ -149,14 +149,7 @@ body = """
 </div>
 
 
-<div class="card {background_color} mb-3">
-    <div class="card-header text-center h2 {text_color}">Skills</div>
-     <div class="card-body">
-    <ul class="list-group">
-      {skills}
-    </ul>   
-      </div>
-</div>
+{field_skill}
 
 
 <div class="card {background_color} mb-3">
@@ -170,7 +163,26 @@ body = """
 
 <div class="break"></div>
 
-<div class="card {background_color} mb-3">
+{field_cert}
+
+
+{field_experience}
+
+</body>
+</html>
+
+"""
+
+field_skill="""<div class="card {background_color} mb-3">
+    <div class="card-header text-center h2 {text_color}">Skills</div>
+     <div class="card-body">
+    <ul class="list-group">
+      {skills}
+    </ul>   
+      </div>
+</div>"""
+
+field_cert="""<div class="card {background_color} mb-3">
     <div class="card-header text-center h2 {text_color}">Licenses & certifications</div>
      <div class="card-body">
         <div class="container d-flex flex-wrap">
@@ -181,9 +193,9 @@ body = """
 </div>
 
 <div class="break"></div>
+"""
 
-
-<div class="card {background_color} mb-3">
+field_experience="""<div class="card {background_color} mb-3">
     <div class="card-header text-center h2 {text_color}">Experience</div>
      <div class="card-body">
 
@@ -193,11 +205,10 @@ body = """
 
       </div>
 </div>
-
-</body>
-</html>
-
 """
+
+
+
 
 
 skills_template = """<li class='list-group-item list-group-item-success d-flex'>{skill}</li>"""
@@ -457,10 +468,17 @@ def main():
 
     background_color = args.background if args.background else "border-light"
 
+
     if args.json:
 
         with open(args.json, 'r') as file, open(flavor) as css:
             cv = json.load(file)
+
+            all_skills = field_skill.format(skills = " ".join ([skills_template.format(skill=ability) for ability in cv["skills"]]),background_color=background_color, text_color=text_color) if len(cv.get("skills")) else "";
+            all_certs = field_cert.format(certifications = " ".join([certs_template.format(background_color=background_color, link=cert['link'], image=cert['image'], description=cert['description'], img_size=img_size) for cert in cv["certifications"]]), background_color=background_color, text_color=text_color) if len(cv.get("certifications")) else "";
+            all_experience = field_experience.format(experience = " ".join([experience_template.format(when=exp['when'], where=exp['where'], what=exp['what'], description=exp['description']) for exp in cv['experience']]), background_color=background_color, text_color=text_color) if len(cv.get("experience")) else "";
+            all_links = " ".join([links_template.format(link=social['link'], color=social['color'], legend=social['legend']) for social in cv["links"]]) if len(cv.get("links")) else "";
+
             result = body.format(
                 icons=icons,   
                 style=css.read(),    
@@ -472,10 +490,10 @@ def main():
                 phone=cv["phone"],
                 email=cv["email"],
                 profile=cv["profile"],
-                links= " ".join([links_template.format(link=social['link'], color=social['color'], legend=social['legend']) for social in cv["links"]]),
-                skills = " ".join ([skills_template.format(skill=ability) for ability in cv["skills"]]),
-                certifications = " ".join([certs_template.format(background_color=background_color, link=cert['link'], image=cert['image'], description=cert['description'], img_size=img_size) for cert in cv["certifications"]]),
-                experience = " ".join([experience_template.format(when=exp['when'], where=exp['where'], what=exp['what'], description=exp['description']) for exp in cv['experience']])
+                links= all_links,
+                field_skill=all_skills,
+                field_cert=all_certs,
+                field_experience = all_experience
 
                 )
             print(result)
