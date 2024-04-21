@@ -168,14 +168,7 @@ body = """
 {field_skill}
 
 
-<div class="card {background_color} mb-3">
-    <div class="card-header text-center h2 {text_color}">Profile</div>
-     <div class="card-body">
-        <div class="alert alert-dismissible alert-info">
-            {profile}
-        </div>
-      </div>
-</div>
+{field_profile}
 
 <div class="break"></div>
 
@@ -193,8 +186,18 @@ body = """
 
 """
 
+field_profile="""<div class="card {background_color} mb-3">
+    <div class="card-header text-center h2 {text_color}">{profile_header}</div>
+     <div class="card-body">
+        <div class="alert alert-dismissible alert-info">
+            {profile}
+        </div>
+      </div>
+</div>
+"""
+
 field_skill="""<div class="card {background_color} mb-3">
-    <div class="card-header text-center h2 {text_color}">Skills</div>
+    <div class="card-header text-center h2 {text_color}">{skill_header}</div>
      <div class="card-body">
     <ul class="list-group">
       {skills}
@@ -203,7 +206,7 @@ field_skill="""<div class="card {background_color} mb-3">
 </div>"""
 
 field_cert="""<div class="card {background_color} mb-3">
-    <div class="card-header text-center h2 {text_color}">Licenses & certifications</div>
+    <div class="card-header text-center h2 {text_color}">{certs_header}</div>
      <div class="card-body">
         <div class="container d-flex flex-wrap">
           {certifications}
@@ -216,10 +219,10 @@ field_cert="""<div class="card {background_color} mb-3">
 """
 
 field_experience="""<div class="card {background_color} mb-3">
-    <div class="card-header text-center h2 {text_color}">Experience</div>
+    <div class="card-header text-center h2 {text_color}">{experience_header}</div>
      <div class="card-body">
 
-    <ul class="list-group">
+    <ul class="list-group"Profile>
       {experience}
           </ul>
 
@@ -230,7 +233,7 @@ field_experience="""<div class="card {background_color} mb-3">
 """
 
 field_references="""<div class="card {background_color} mb-3">
-    <div class="card-header text-center h2 {text_color}">References</div>
+    <div class="card-header text-center h2 {text_color}">{references_header}</div>
      <div class="card-body">
 
     <ul class="list-group">
@@ -242,7 +245,7 @@ field_references="""<div class="card {background_color} mb-3">
 """
 
 field_education="""<div class="card {background_color} mb-3">
-    <div class="card-header text-center h2 {text_color}">Education</div>
+    <div class="card-header text-center h2 {text_color}">{education_header}</div>
      <div class="card-body">
     <ul class="list-group">
       {education}
@@ -401,6 +404,9 @@ def main():
     # Optional argument to specify flavor
     parser.add_argument('-f','--flavor', help='Flavor of the script', choices=flavors)
 
+    # Optional argument to specify language
+    parser.add_argument('-l','--language', help='Defaults to English', choices=["spa", "eng"])
+
     # Optional argument to create a JSON - Minimal version
     parser.add_argument('-n', '--new', action='store_true', help="Resulting json is your cv. Use -a flag to add new entries.")
 
@@ -524,18 +530,33 @@ def main():
 
     background_color = args.background if args.background else "border-light"
 
+    profile_header = "Perfil" if args.language == "spa" else "Profile"
+
+    skill_header = "Habilidades"  if args.language == "spa" else "Skills"
+
+    certs_header = "Licencias y Certificaciones" if args.language == "spa" else "Licenses & Certifications" 
+
+    experience_header = "Experiencia" if args.language == "spa" else "Experience" 
+
+    references_header = "Referencias" if args.language == "spa" else "References"
+
+    education_header = "Educación" if args.language == "spa" else "Education"
+
+
 
     if args.json:
 
         with open(args.json, 'r') as file, open(flavor) as css:
             cv = json.load(file)
 
-            all_skills = field_skill.format(skills = " ".join ([skills_template.format(skill=ability) for ability in cv["skills"]]),background_color=background_color, text_color=text_color) if len(cv.get("skills")) else "";
-            all_certs = field_cert.format(certifications = " ".join([certs_template.format(background_color=background_color, link=cert['link'], image=cert['image'], description=cert['description'], img_size=img_size) for cert in cv["certifications"]]), background_color=background_color, text_color=text_color) if len(cv.get("certifications")) else "";
-            all_experience = field_experience.format(experience = " ".join([experience_template.format(when=exp['when'], where=exp['where'], what=exp['what'], description=exp['description']) for exp in cv['experience']]), background_color=background_color, text_color=text_color) if len(cv.get("experience")) else "";
+            all_skills = field_skill.format(skills = " ".join ([skills_template.format(skill=ability) for ability in cv["skills"]]),background_color=background_color, text_color=text_color, skill_header=skill_header) if len(cv.get("skills")) else "";
+            all_certs = field_cert.format(certifications = " ".join([certs_template.format(background_color=background_color, link=cert['link'], image=cert['image'], description=cert['description'], img_size=img_size) for cert in cv["certifications"]]), background_color=background_color, text_color=text_color, certs_header=certs_header) if len(cv.get("certifications")) else "";
+            all_experience = field_experience.format(experience = " ".join([experience_template.format(when=exp['when'], where=exp['where'], what=exp['what'], description=exp['description']) for exp in cv['experience']]), background_color=background_color, text_color=text_color, experience_header=experience_header) if len(cv.get("experience")) else "";
             all_links = " ".join([links_template.format(link=social['link'], color=social['color'], legend=social['legend']) for social in cv["links"]]) if len(cv.get("links")) else "";
-            all_references = field_references.format(references = " ".join([references_template.format(who=refer['who'], tel=refer['tel']) for refer in cv['references']]), background_color=background_color, text_color=text_color) if len(cv.get("references")) else "";
-            all_education = field_education.format(education = " ".join ([education_template.format(education=ed) for ed in cv["education"]]),background_color=background_color, text_color=text_color) if len(cv.get("education")) else "";
+            all_references = field_references.format(references = " ".join([references_template.format(who=refer['who'], tel=refer['tel']) for refer in cv['references']]), background_color=background_color, text_color=text_color, references_header=references_header) if len(cv.get("references")) else "";
+            all_education = field_education.format(education = " ".join ([education_template.format(education=ed) for ed in cv["education"]]),background_color=background_color, text_color=text_color, education_header=education_header) if len(cv.get("education")) else "";
+            all_profile = field_profile.format(profile=cv["profile"], background_color=background_color, text_color=text_color, profile_header=profile_header) if cv.get("profile") else "";
+
 
             result = body.format(
                 icons=icons,   
@@ -547,7 +568,7 @@ def main():
                 residence=cv["residence"],
                 phone=cv["phone"],
                 email=cv["email"],
-                profile=cv["profile"],
+                field_profile=all_profile,
                 links= all_links,
                 field_skill=all_skills,
                 field_cert=all_certs,
@@ -562,3 +583,4 @@ def main():
 if __name__ == "__main__":
     main()
 
+# TODO english-spanish headers 
