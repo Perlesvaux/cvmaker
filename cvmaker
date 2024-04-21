@@ -76,7 +76,14 @@ large_seed = {
       "Customize_skill_set_as_you_see_fit",
       "Add_soft_skills_if_you_want_as_well",
       "Be_prudent_as_too_many_rows_can_make_the_final_document_somewhat_ugly"
-  ]
+  ],
+  "references":[
+    {
+      "who": "John Doe Smith",
+      "tel": "1-800-phone-goes-here"
+    }
+
+      ]
 }
 
 
@@ -89,7 +96,8 @@ seed = {
   "links":[],
   "experience":[],
   "certifications":[],
-  "skills":[]
+  "skills":[],
+  "references":[],
 }
 
 
@@ -114,7 +122,7 @@ body = """
 
     </style>
 
-    <title>cvmaker</title>
+    <title>{name}</title>
 </head>
 <body>
 
@@ -168,6 +176,9 @@ body = """
 
 {field_experience}
 
+
+{field_references}
+
 </body>
 </html>
 
@@ -205,6 +216,20 @@ field_experience="""<div class="card {background_color} mb-3">
 
       </div>
 </div>
+
+<div class="break"></div>
+"""
+
+field_references="""<div class="card {background_color} mb-3">
+    <div class="card-header text-center h2 {text_color}">References</div>
+     <div class="card-body">
+
+    <ul class="list-group">
+      {references}
+          </ul>
+
+      </div>
+</div>
 """
 
 
@@ -235,6 +260,18 @@ experience_template = """
    """
 
 
+references_template = """
+<li class='list-group-item list-group-item-secondary d-flex text-center'>
+ <div class='container'>
+  <div class='row'>
+   <div class='col-6'><strong>{who}</strong></div>
+   <div class='col-6'>{tel}</div>
+  </div>
+ </div>
+</li>
+   """
+
+
 links_template = "<a href='{link}' class='btn btn-{color} flex-fill m-2'>{legend}</a>" 
 
 
@@ -253,7 +290,8 @@ actions={
         'skill': lambda: adding('skills', "Enter your new skill!\n>"),
         'experience': lambda: addition('experience', {"when":"When? i.e.: Jun 1996 - Dec 1999\n>", "where":"Where? i.e.: Microsoft\n>", "what":"what? i.e.: Front End Developer\n>", "description":"Please describe this role\n> "}),
         'cert': lambda: addition('certifications', {"description": "Describe what the certification is about\n> ", "image": "Add path to image. Paste with CTRL+Shift+V\n> ", "link": "Add link to certification. Paste with CTRL+Shift+V\n> "}),
-        'link': lambda: addition('links', {"link":"Add link to certification. Paste with CTRL+Shift+V\n> ", "color": "Select color: light dark primary secondary success danger warning info\n> ", "legend": "Look for a cool icon here: https://icons.getbootstrap.com/ (Paste with CTRL+Shift+V)\n> "})
+        'link': lambda: addition('links', {"link":"Add link to certification. Paste with CTRL+Shift+V\n> ", "color": "Select color: light dark primary secondary success danger warning info\n> ", "legend": "Look for a cool icon here: https://icons.getbootstrap.com/ (Paste with CTRL+Shift+V)\n> "}),
+        'reference': lambda: addition('references', {"who":"Who?\n>", "tel":"Telephone?\n>"}),
         }
 
 # CLI choices
@@ -352,7 +390,7 @@ def main():
     parser.add_argument('-w', '--whole', action='store_true', help="Resulting json is your cv. Customise it as you see fit.")
 
     # Optional argument to add properties to JSON
-    parser.add_argument('-a', '--add', choices=['skill', 'experience', 'cert', 'link'], nargs="?", help="Add new skills, experience & certificates interactively.")
+    parser.add_argument('-a', '--add', choices=actions.keys(), nargs="?", help="Add new skills, experience & certificates interactively.")
 
     # Optional argument to change card-header theme at runtime
     parser.add_argument('-t', '--text-color', choices=textcolors, nargs="?", help="Select text-color of card-headers")
@@ -478,6 +516,7 @@ def main():
             all_certs = field_cert.format(certifications = " ".join([certs_template.format(background_color=background_color, link=cert['link'], image=cert['image'], description=cert['description'], img_size=img_size) for cert in cv["certifications"]]), background_color=background_color, text_color=text_color) if len(cv.get("certifications")) else "";
             all_experience = field_experience.format(experience = " ".join([experience_template.format(when=exp['when'], where=exp['where'], what=exp['what'], description=exp['description']) for exp in cv['experience']]), background_color=background_color, text_color=text_color) if len(cv.get("experience")) else "";
             all_links = " ".join([links_template.format(link=social['link'], color=social['color'], legend=social['legend']) for social in cv["links"]]) if len(cv.get("links")) else "";
+            all_references = field_references.format(references = " ".join([references_template.format(who=refer['who'], tel=refer['tel']) for refer in cv['references']]), background_color=background_color, text_color=text_color) if len(cv.get("references")) else "";
 
             result = body.format(
                 icons=icons,   
@@ -493,7 +532,8 @@ def main():
                 links= all_links,
                 field_skill=all_skills,
                 field_cert=all_certs,
-                field_experience = all_experience
+                field_experience = all_experience,
+                field_references = all_references
 
                 )
             print(result)
