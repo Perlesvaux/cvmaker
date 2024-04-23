@@ -84,12 +84,9 @@ large_seed = {
     }
   ],
   "education":[
-    {
       "Highschool_goes_here",
       "english_goes_here",
       "Higher_ed_goes_here"
-    }
-
   ]
 }
 
@@ -105,7 +102,7 @@ seed = {
   "certifications":[],
   "skills":[],
   "references":[],
-  "education":[],
+  "education":[]
 }
 
 
